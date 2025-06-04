@@ -1,0 +1,219 @@
+{
+	"info": {
+		"_postman_id": "7dd6482b-ba3e-425a-a8fa-dae8bf0f0b0c",
+		"name": "tech-assessment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "11694702"
+	},
+	"item": [
+		{
+			"name": "cuisine-get-all",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/cuisine/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"cuisine",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cuisine-create-new",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Brazilian\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/cuisine",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"cuisine"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cuisine-delete-by-id",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/cuisine/158",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"cuisine",
+						"158"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant-get-by-name",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/restaurant/maintenance/name?name=Embaixada Mineira",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"restaurant",
+						"maintenance",
+						"name"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Embaixada Mineira"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant-create-new",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"restaurantName\": \"Embaixada Mineira\",\r\n    \"distance\": 5,\r\n    \"customerRating\": 5,\r\n    \"price\": 45.00,\r\n    \"cuisineName\": \"Brazilian\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/v1/restaurant/maintenance",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"restaurant",
+						"maintenance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "restaurant-delete-by-id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/restaurant/maintenance/294",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"restaurant",
+						"maintenance",
+						"294"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "best-matched-restaurants",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/v1/restaurants/search?restaurantName=Embaixada&distance=5&customerRating=4&price=50&cuisineName=Brazilian",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"v1",
+						"restaurants",
+						"search"
+					],
+					"query": [
+						{
+							"key": "restaurantName",
+							"value": "Embaixada"
+						},
+						{
+							"key": "distance",
+							"value": "5"
+						},
+						{
+							"key": "customerRating",
+							"value": "4"
+						},
+						{
+							"key": "price",
+							"value": "50"
+						},
+						{
+							"key": "cuisineName",
+							"value": "Brazilian"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
