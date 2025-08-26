@@ -71,3 +71,7 @@ subprojects {
 		useJUnitPlatform()
 	}
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	mainClass.set("com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplicationKt")
+}
