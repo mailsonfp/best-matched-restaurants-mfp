@@ -1,18 +1,18 @@
 plugins {
-	kotlin("jvm") version "1.9.25"
-	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "3.3.5"
-	id("io.spring.dependency-management") version "1.1.6"
-	kotlin("plugin.jpa") version "1.9.25"
-	id("org.flywaydb.flyway") version "6.4.3"
+	kotlin("jvm") version Versions.kotlin
+	kotlin("plugin.spring") version Versions.kotlin
+	id("org.springframework.boot") version Versions.springBoot
+	id("io.spring.dependency-management") version Versions.springDependencyManagement
+	kotlin("plugin.jpa") version Versions.kotlin
+	id("org.flywaydb.flyway") version Versions.flywayPlugin
 }
 
-group = "com.mailson.pereira.tech.assessment"
-version = "0.0.1-SNAPSHOT"
+group = Versions.projectGroup
+version = Versions.projectVersion
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion = JavaLanguageVersion.of(Versions.javaVersion)
 	}
 }
 
@@ -28,31 +28,32 @@ subprojects {
 	}
 
 	dependencies {
-		implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.5")
-		implementation("org.springframework.boot:spring-boot-starter-web:3.3.5")
-		implementation("org.springframework.boot:spring-boot-starter-validation:3.3.5")
+		implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 
-		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
-		implementation("org.jetbrains.kotlin:kotlin-reflect")
-		implementation("io.springfox:springfox-bean-validators:3.0.0")
+		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
+		implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
+		implementation("io.springfox:springfox-bean-validators:${Versions.springFox}")
 
-		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.openApi}")
 
-		implementation("org.flywaydb:flyway-core:11.8.2")
+		implementation("org.flywaydb:flyway-core:${Versions.flywayCore}")
 
-		implementation("ch.qos.logback:logback-core:1.5.18")
-		implementation("ch.qos.logback.contrib:logback-json-classic:0.1.5")
-		implementation("ch.qos.logback.contrib:logback-jackson:0.1.5")
-		implementation("ch.qos.logback:logback-classic:1.5.18")
+		implementation("ch.qos.logback:logback-core:${Versions.logback}")
+		implementation("ch.qos.logback:logback-classic:${Versions.logback}")
+		implementation("ch.qos.logback.contrib:logback-json-classic:${Versions.logbackContrib}")
+		implementation("ch.qos.logback.contrib:logback-jackson:${Versions.logbackContrib}")
 
-		runtimeOnly("com.h2database:h2:2.3.232")
+		runtimeOnly("org.postgresql:postgresql:${Versions.postgres}")
+		runtimeOnly("com.h2database:h2:${Versions.h2}")
 
-		testImplementation("org.springframework.boot:spring-boot-starter-test:3.3.5")
-		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-		testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-		testImplementation("org.mockito:mockito-core:4.8.0")
-		testImplementation("org.mockito:mockito-junit-jupiter:4.8.0")
-		testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+		testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
+		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Versions.kotlin}")
+		testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")
+		testImplementation("org.mockito:mockito-core:${Versions.mockitoCore}")
+		testImplementation("org.mockito:mockito-junit-jupiter:${Versions.mockitoCore}")
+		testImplementation("org.mockito.kotlin:mockito-kotlin:${Versions.mockitoKotlin}")
 	}
 
 	kotlin {
@@ -73,5 +74,5 @@ subprojects {
 }
 
 tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-	mainClass.set("com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplicationKt")
+	mainClass.set(Versions.mainClassName)
 }
