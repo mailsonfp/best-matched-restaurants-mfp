@@ -13,5 +13,5 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(Versions.javaVersion)
 }

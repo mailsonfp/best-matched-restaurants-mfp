@@ -17,7 +17,7 @@ object Versions {
     const val mockitoCore = "4.8.0"
     const val mockitoKotlin = "4.0.0"
     const val junit = "5.8.1"
-    const val javaVersion = 17
+    const val javaVersion = 21
 
     //project
     const val mainClassName = "com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplicationKt"
