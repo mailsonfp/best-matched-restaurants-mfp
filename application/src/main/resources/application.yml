@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: best-matched-restaurants-mfp
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+springdoc:
+  packages-to-scan: com.mailson.pereira.tech.assessment.web
+  swagger-ui:
+    path: /swagger-ui.html
+  api:
+    title: "Application for tech assessment"

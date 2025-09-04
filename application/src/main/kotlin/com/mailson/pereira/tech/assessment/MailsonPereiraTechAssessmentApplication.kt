@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.info.Info
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
-import java.util.*
+import java.util.TimeZone
 
 @SpringBootApplication
 @EntityScan("com.mailson.pereira.tech.assessment")

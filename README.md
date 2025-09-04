@@ -1,6 +1,6 @@
 ### **Mailson Fernando Pereira - technical assessment**
 
-### **Run the project**  
+### **Run the project with IntelliJ**  
 Get the .zip file attached to the e-mail, import into an IDE(I used IntelliJ) and run the class
 MailsonPereiraTechAssessmentApplication  
 The class is in module application, package: mailson.pereira.tech.assessment  
@@ -10,15 +10,30 @@ account: https://github.com/mailsonfp
 project repository: https://github.com/mailsonfp/best-matched-restaurants-mfp  
 clone url: https://github.com/mailsonfp/best-matched-restaurants-mfp.git  
 
+### **Run the project for docker users**
+The project is prepared to run with docker to mount the image or run with docker compose.  
+Dockerfile:
+will use gradle to build the jar with dependencies  
+docker-compose.yml
+will create a postgres server
+start the application with variables SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD  
+In the project root, run: docker compose up  
+Consume the APIs with Postman using the tech-assessment.postman_collection.json collection
+
+If you are going to build and run the image, be attention to pass the variables SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD
+to connect with database properly.
+
 ### **Database**
-Only to facilitate the tests I used h2 database, but I work daily with Postgres and I have previous
-knowledge with Oracle, MYsql and SQL Server
+The application is ready to connect with postgres using the variables below:  
+SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD  
+
 About the database I also used Flyway as migration tool, because facilitates insertion of data,
-so, when run the project for the first time, the database, tables and data will be provided automatically  
+so, when run the project for the first time, tables and data will be provided automatically.  
 
 flyway directory: classpath:db/migration  
 V1__create_tables.sql - ddl create for tables  
-V2__insert_data.sql - dml inserts for the table  
+V2__insert_data.sql - dml inserts for the table
+V3__alter_table_set_identity_and_value.sql - ddl to set identity and update the value for table cuisine
 &emsp;I just get the data from the .csv files, turned them into insert script and create the migration file.  
 
 ### **Testing the solution**

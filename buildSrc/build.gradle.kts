@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")
+    kotlin("jvm")  version "1.9.25"
 }
 
 group = "com.mailson.pereira.tech.assessment"
@@ -10,13 +10,9 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":input-boundary"))
-    implementation(project(":output-boundary"))
+    implementation(kotlin("stdlib"))
 }
 
 tasks.test {
     useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(Versions.javaVersion)
 }

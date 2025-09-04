@@ -18,8 +18,6 @@ insert into cuisine(id,name) values (17,'Indonesian');
 insert into cuisine(id,name) values (18,'Russian');
 insert into cuisine(id,name) values (19,'Other');
 
-ALTER TABLE cuisine ALTER COLUMN id RESTART WITH 20;
-
 insert into restaurant(name,customer_rating,distance,price,cuisine_id) values ('Deliciousgenix',4,1,10,11);
 insert into restaurant(name,customer_rating,distance,price,cuisine_id) values ('Herbed Delicious',4,7,20,9);
 insert into restaurant(name,customer_rating,distance,price,cuisine_id) values ('Deliciousscape',3,7,50,1);
