@@ -12,7 +12,6 @@ object Versions {
     const val flywayCore = "11.8.2"
     const val logback = "1.5.18"
     const val logbackContrib = "0.1.5"
-    const val h2 = "2.3.232"
     const val postgres = "42.7.3"
     const val mockitoCore = "4.8.0"
     const val mockitoKotlin = "4.0.0"

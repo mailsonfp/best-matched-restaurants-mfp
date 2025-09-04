@@ -5,10 +5,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
-//@Configuration
+@Configuration
 class DataSourceConfig {
 
-    //@Bean
+    @Bean
     fun dataSource(): DataSource =
         DataSourceBuilder.create()
             .url(System.getenv("SPRING_DATASOURCE_URL"))

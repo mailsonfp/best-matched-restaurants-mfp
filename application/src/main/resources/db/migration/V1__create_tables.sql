@@ -1,5 +1,5 @@
 create table restaurant (
-    id int not null PRIMARY KEY auto_increment,
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name varchar,
     customer_rating int,
     distance int,
@@ -7,7 +7,7 @@ create table restaurant (
     cuisine_id int);
 
 create table cuisine(
-    id int not null PRIMARY KEY auto_increment,
+    id INT PRIMARY KEY,
     name varchar
 );
 

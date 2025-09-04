@@ -39,6 +39,7 @@ subprojects {
 		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:${Versions.openApi}")
 
 		implementation("org.flywaydb:flyway-core:${Versions.flywayCore}")
+		implementation("org.flywaydb:flyway-database-postgresql:${Versions.flywayCore}")
 
 		implementation("ch.qos.logback:logback-core:${Versions.logback}")
 		implementation("ch.qos.logback:logback-classic:${Versions.logback}")
@@ -46,7 +47,6 @@ subprojects {
 		implementation("ch.qos.logback.contrib:logback-jackson:${Versions.logbackContrib}")
 
 		runtimeOnly("org.postgresql:postgresql:${Versions.postgres}")
-		runtimeOnly("com.h2database:h2:${Versions.h2}")
 
 		testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Versions.kotlin}")

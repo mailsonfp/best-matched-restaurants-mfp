@@ -2,16 +2,16 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15
+    image: postgres:17.6
     container_name: postgres-db
     environment:
-      POSTGRES_DB: restaurants
-      POSTGRES_USER: usuario
-      POSTGRES_PASSWORD: senha123
+      POSTGRES_DB: restaurantsdb
+      POSTGRES_USER: restaurantDBUser
+      POSTGRES_PASSWORD: restaurant2025
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/data
 
 #  app:
 #    build: .
@@ -21,11 +21,10 @@ services:
 #    ports:
 #      - "8080:8080"
 #    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurants
-#      SPRING_DATASOURCE_USERNAME: usuario
-#      SPRING_DATASOURCE_PASSWORD: senha123
-#      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurantsdb
+#      SPRING_DATASOURCE_USERNAME: restaurantDBUser
+#      SPRING_DATASOURCE_PASSWORD: restaurant2025
 #    restart: always
 
 volumes:
-  pgdata:
+  dbdata:

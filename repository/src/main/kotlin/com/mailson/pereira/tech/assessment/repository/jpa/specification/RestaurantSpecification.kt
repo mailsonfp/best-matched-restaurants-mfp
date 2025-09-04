@@ -47,7 +47,7 @@ object RestaurantSpecifications {
             orders.add(criteriaBuilder.asc(root.get<Int>("distance")))
             orders.add(criteriaBuilder.desc(root.get<Int>("customerRating")))
             orders.add(criteriaBuilder.asc(root.get<BigDecimal>("price")))
-            orders.add(criteriaBuilder.asc(criteriaBuilder.function("RAND", Double::class.java)))
+            orders.add(criteriaBuilder.asc(criteriaBuilder.function("random", Double::class.java)))
 
             query?.orderBy(orders)
 
