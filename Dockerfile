@@ -4,18 +4,17 @@ WORKDIR /app
 
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
-COPY gradle.properties .
 COPY gradle/ gradle/
 
 COPY . .
 
-RUN gradle bootJar --no-daemon
+RUN gradle :application:bootJar --no-daemon
 
 FROM openjdk:21-jdk-slim
 
 WORKDIR /app
 
-COPY --from=builder /app/build/libs/best-matched-restaurants-mfp-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/application/build/libs/*.jar app.jar
 
 EXPOSE 8080
 

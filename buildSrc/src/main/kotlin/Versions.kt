@@ -19,7 +19,7 @@ object Versions {
     const val javaVersion = 21
 
     //project
-    const val mainClassName = "com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplicationKt"
+    const val projectMainClassName = "com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplication"
     const val projectGroup = "com.mailson.pereira.tech.assessment"
     const val projectVersion = "0.0.1-SNAPSHOT"
 }
