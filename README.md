@@ -17,11 +17,13 @@ will use gradle to build the jar with dependencies
 docker-compose.yml
 will create a postgres server
 start the application with variables SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD  
+
 In the project root, run: docker compose up  
 Consume the APIs with Postman using the tech-assessment.postman_collection.json collection
 
-If you are going to build and run the image, be attention to pass the variables SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD
-to connect with database properly.
+#### **Attention:**
+#### **Both Postgres and the project are set to the default port(5432,8080) be attention with ports already in use**
+#### **If you are going to build and run the image, be attention to pass the variables SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME and SPRING_DATASOURCE_PASSWORD to connect with database properly.**
 
 ### **Database**
 The application is ready to connect with postgres using the variables below:  
