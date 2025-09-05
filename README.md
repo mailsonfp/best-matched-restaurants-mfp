@@ -34,7 +34,7 @@ so, when run the project for the first time, tables and data will be provided au
 
 flyway directory: classpath:db/migration  
 V1__create_tables.sql - ddl create for tables  
-V2__insert_data.sql - dml inserts for the table
+V2__insert_data.sql - dml inserts for the table  
 V3__alter_table_set_identity_and_value.sql - ddl to set identity and update the value for table cuisine
 &emsp;I just get the data from the .csv files, turned them into insert script and create the migration file.  
 
