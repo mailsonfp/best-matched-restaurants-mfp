@@ -1,6 +1,7 @@
 package com.mailson.pereira.tech.assessment.service.restaurant
 
 import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsException
+import com.mailson.pereira.tech.assessment.input.restaurant.RestaurantSearchInput
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
 import com.mailson.pereira.tech.assessment.output.restaurant.dto.RestaurantOutputDTO
@@ -10,7 +11,7 @@ import java.math.BigDecimal
 @Service
 class RestaurantSearchService(
     private val restaurantRepository: RestaurantRepository
-): com.mailson.pereira.tech.assessment.input.restaurant.RestaurantSearchInput {
+): RestaurantSearchInput {
 
     override fun findBestMatchedRestaurants(
         restaurantName: String?,
