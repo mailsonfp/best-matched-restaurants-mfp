@@ -31,6 +31,8 @@ subprojects {
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-amqp:${Versions.springBoot}")
+
 
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
 		implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")

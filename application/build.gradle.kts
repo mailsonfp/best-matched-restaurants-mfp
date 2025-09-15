@@ -16,6 +16,9 @@ dependencies {
     implementation(project(":repository"))
     implementation(project(":service"))
     implementation(project(":web"))
+    implementation(project(":message-producer"))
+    implementation(project(":message-consumer"))
+    implementation(project(":configuration"))
 }
 
 tasks.test {
