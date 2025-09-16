@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":message-producer"))
     implementation(project(":message-consumer"))
     implementation(project(":configuration"))
+    implementation(project(":commons"))
 }
 
 tasks.test {
