@@ -23,7 +23,6 @@ class RestaurantSearchQueueConfig(
 ) {
     @Bean
     fun searchQueue(): Queue {
-        println("Search queue initialized")
         return QueueBuilder.durable(searchQueueName)
             .withArgument("x-dead-letter-exchange", searchDlqExchange)
             .withArgument("x-dead-letter-routing-key", searchDlqQueueName)

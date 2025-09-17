@@ -1,17 +1,25 @@
 package com.mailson.pereira.tech.assessment.service.restaurant
 
+import com.google.gson.Gson
+import com.mailson.pereira.tech.assessment.entities.enums.ParamKeyEnum
 import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsException
 import com.mailson.pereira.tech.assessment.input.restaurant.RestaurantSearchInput
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
+import com.mailson.pereira.tech.assessment.output.message.producer.MessageOutputProducer
+import com.mailson.pereira.tech.assessment.output.message.producer.dto.MessageDetailOutputDTO
+import com.mailson.pereira.tech.assessment.output.message.producer.dto.MessageOutputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
 import com.mailson.pereira.tech.assessment.service.mapper.RestaurantMapper
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
 class RestaurantSearchService(
     private val restaurantRepository: RestaurantRepository,
-    private val restaurantMapper: RestaurantMapper
+    private val restaurantMapper: RestaurantMapper,
+    private val messageOutput: MessageOutputProducer,
+    private val gson: Gson
 ): RestaurantSearchInput {
 
     override fun findBestMatchedRestaurants(
@@ -19,31 +27,44 @@ class RestaurantSearchService(
         distance: Int?,
         customerRating: Int?,
         price: BigDecimal?,
-        cuisineName: String?
+        cuisineName: String?,
+        httpServletRequest: HttpServletRequest
     ): List<RestaurantMatchedResponseInputDTO> {
-        return if (isValidateRestaurantSearchParams(
+        validateRestaurantSearchParams(
+            restaurantName,
+            distance,
+            customerRating,
+            price,
+            cuisineName)
+
+        val matchedRestaurantsList = restaurantRepository.findBestMatchedRestaurants(
                 restaurantName,
                 distance,
                 customerRating,
                 price,
-                cuisineName)) {
-            restaurantRepository.findBestMatchedRestaurants(
-                restaurantName,
-                distance,
-                customerRating,
-                price,
-                cuisineName
-            ).map { restaurantMapper.toMatchedDTO(it) }
-        } else arrayListOf()
+                cuisineName)
+            .map { restaurantMapper.toMatchedDTO(it) }
+
+        sendSearchMetric(
+            restaurantName,
+            distance,
+            customerRating,
+            price,
+            cuisineName,
+            matchedRestaurantsList,
+            httpServletRequest
+        )
+
+        return matchedRestaurantsList
     }
 
-    override fun isValidateRestaurantSearchParams(
+    override fun validateRestaurantSearchParams(
         restaurantName: String?,
         distance: Int?,
         customerRating: Int?,
         price: BigDecimal?,
         cuisineName: String?
-    ): Boolean {
+    ) {
         val errors = mutableListOf<String>()
 
         if(restaurantName == null && distance == null && customerRating == null
@@ -67,7 +88,74 @@ class RestaurantSearchService(
         if (errors.isNotEmpty()) {
             throw InvalidSearchParamsException(errors.joinToString(";"))
         }
+    }
 
-        return true
+    private fun sendSearchMetric(
+        restaurantName: String?,
+        distance: Int?,
+        customerRating: Int?,
+        price: BigDecimal?,
+        cuisineName: String?,
+        searchResult: List<RestaurantMatchedResponseInputDTO>,
+        httpServletRequest: HttpServletRequest
+    ) {
+        val paramsList = arrayListOf<MessageDetailOutputDTO>()
+        when {
+            restaurantName != null -> paramsList.add(
+                MessageDetailOutputDTO(
+                    paramKey = ParamKeyEnum.RESTAURANT_NAME.paramName,
+                    paramValue = restaurantName,
+                    paramType = ParamKeyEnum.RESTAURANT_NAME.paramType.name,
+                )
+            )
+
+            distance != null -> paramsList.add(
+                MessageDetailOutputDTO(
+                    paramKey = ParamKeyEnum.DISTANCE.paramName,
+                    paramValue = distance.toString(),
+                    paramType = ParamKeyEnum.DISTANCE.paramType.name,
+                )
+            )
+
+            customerRating != null -> paramsList.add(
+                MessageDetailOutputDTO(
+                    paramKey = ParamKeyEnum.CUSTOMER_RATING.paramName,
+                    paramValue = customerRating.toString(),
+                    paramType = ParamKeyEnum.CUSTOMER_RATING.paramType.name,
+                )
+            )
+
+            price != null -> paramsList.add(
+                MessageDetailOutputDTO(
+                    paramKey = ParamKeyEnum.PRICE.paramName,
+                    paramValue = price.toString(),
+                    paramType = ParamKeyEnum.PRICE.paramType.name,
+                )
+            )
+
+            cuisineName != null -> paramsList.add(
+                MessageDetailOutputDTO(
+                    paramKey = ParamKeyEnum.CUISINE_NAME.paramName,
+                    paramValue = cuisineName.toString(),
+                    paramType = ParamKeyEnum.CUISINE_NAME.paramType.name,
+                )
+            )
+        }
+
+        val searchMetricMessage = MessageOutputDTO(
+            searchClientIp = extractClientIp(httpServletRequest),
+            searchUserAgent = httpServletRequest.getHeader("User-Agent"),
+            searchReferrer = httpServletRequest.getHeader("Referer"),
+            searchResultCount = searchResult.size,
+            searchOtherMetadata = gson.toJson(searchResult),
+            searchParams = paramsList
+        )
+
+        messageOutput.sendMessageToSearchQueue(searchMetricMessage)
+    }
+
+    private fun extractClientIp(request: HttpServletRequest): String {
+        return request.getHeader("X-Forwarded-For")?.split(",")?.firstOrNull()?.trim()
+            ?: request.remoteAddr
     }
 }

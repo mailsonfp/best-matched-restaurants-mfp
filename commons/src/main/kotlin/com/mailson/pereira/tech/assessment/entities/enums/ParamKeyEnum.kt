@@ -1,6 +1,6 @@
 package com.mailson.pereira.tech.assessment.entities.enums
 
-enum class ParamKeyEnum(val paramName: String, paramType: ParamTypeEnum) {
+enum class ParamKeyEnum(val paramName: String, val paramType: ParamTypeEnum) {
     RESTAURANT_NAME("restaurantName", ParamTypeEnum.STRING),
     DISTANCE("distance", ParamTypeEnum.INT),
     CUSTOMER_RATING("customerRating", ParamTypeEnum.INT),

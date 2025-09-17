@@ -1,5 +1,9 @@
 package com.mailson.pereira.tech.assessment.configuration.rabbitmq
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory
 import org.springframework.amqp.rabbit.core.RabbitAdmin
 import org.springframework.amqp.rabbit.core.RabbitTemplate
@@ -36,11 +40,24 @@ class RabbitMQConfig(
     }
 
     @Bean
-    fun rabbitTemplate(connectionFactory: CachingConnectionFactory): RabbitTemplate {
-        return RabbitTemplate(connectionFactory).apply {
-            messageConverter = Jackson2JsonMessageConverter()
-        }
+    fun jacksonMessageConverter(): Jackson2JsonMessageConverter {
+        val objectMapper = ObjectMapper()
+            .registerKotlinModule()
+            .registerModule(JavaTimeModule()) // Suporte a LocalDateTime
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+
+        return Jackson2JsonMessageConverter(objectMapper)
     }
+
+    @Bean
+    fun rabbitTemplate(
+        connectionFactory: CachingConnectionFactory,
+        messageConverter: Jackson2JsonMessageConverter
+    ): RabbitTemplate =
+        RabbitTemplate(connectionFactory).apply {
+            this.messageConverter = messageConverter
+        }
+
 
     @Bean
     fun rabbitmqInitialize(rabbitAdmin: RabbitAdmin)= CommandLineRunner {
