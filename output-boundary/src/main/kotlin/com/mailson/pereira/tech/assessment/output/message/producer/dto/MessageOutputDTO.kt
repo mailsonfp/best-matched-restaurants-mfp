@@ -1,11 +1,13 @@
 package com.mailson.pereira.tech.assessment.output.message.producer.dto
 
-import java.math.BigDecimal
+import java.time.LocalDateTime
 
 data class MessageOutputDTO(
-    val restaurantName: String?,
-    val distance: Int?,
-    val customerRating: Int?,
-    val price: BigDecimal?,
-    val cuisineName: String?
+    val searchDateTime: LocalDateTime = LocalDateTime.now(),
+    val searchClientIp: String,
+    val searchUserAgent: String? = null,
+    val searchReferrer: String? = null,
+    val searchResultCount: Int = 0,
+    val searchOtherMetadata: String? = null,
+    val searchParams: List<MessageDetailOutputDTO>
 )

@@ -10,8 +10,8 @@ interface RestaurantRepository {
     fun getByName(name: String): RestaurantOutputDTO?
     fun findBestMatchedRestaurants(
         restaurantName: String? = null,
-        customerRating: Int? = null,
         distance: Int? = null,
+        customerRating: Int? = null,
         price: BigDecimal? = null,
         cuisineName: String? = null
     ): List<RestaurantOutputDTO>
