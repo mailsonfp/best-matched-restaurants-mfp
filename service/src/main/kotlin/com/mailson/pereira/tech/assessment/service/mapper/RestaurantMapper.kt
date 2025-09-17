@@ -1,5 +1,6 @@
 package com.mailson.pereira.tech.assessment.service.mapper
 
+import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantRequestInputDTO
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO
 import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
@@ -22,5 +23,9 @@ interface RestaurantMapper {
     @Mapping(source = "request.price", target = "price")
     @Mapping(source = "cuisine", target = "cuisine")
     fun toOutputDTO(request: RestaurantRequestInputDTO, cuisine: CuisineOutputDTO): RestaurantOutputDTO
+
+    @Mapping(source = "name", target = "restaurantName")
+    @Mapping(source = "cuisine.name", target = "cuisineName")
+    fun toMatchedDTO(output: RestaurantOutputDTO): RestaurantMatchedResponseInputDTO
 
 }

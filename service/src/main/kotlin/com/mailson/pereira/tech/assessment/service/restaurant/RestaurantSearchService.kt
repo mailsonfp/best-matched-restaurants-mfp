@@ -4,13 +4,14 @@ import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsE
 import com.mailson.pereira.tech.assessment.input.restaurant.RestaurantSearchInput
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
-import com.mailson.pereira.tech.assessment.output.restaurant.dto.RestaurantOutputDTO
+import com.mailson.pereira.tech.assessment.service.mapper.RestaurantMapper
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
 @Service
 class RestaurantSearchService(
-    private val restaurantRepository: RestaurantRepository
+    private val restaurantRepository: RestaurantRepository,
+    private val restaurantMapper: RestaurantMapper
 ): RestaurantSearchInput {
 
     override fun findBestMatchedRestaurants(
@@ -32,7 +33,7 @@ class RestaurantSearchService(
                 customerRating,
                 price,
                 cuisineName
-            ).map { toRestaurantMatchedResponseInputDTO(it) }
+            ).map { restaurantMapper.toMatchedDTO(it) }
         } else arrayListOf()
     }
 
@@ -69,12 +70,4 @@ class RestaurantSearchService(
 
         return true
     }
-
-    private fun toRestaurantMatchedResponseInputDTO(restaurantOutputDTO: RestaurantOutputDTO) = RestaurantMatchedResponseInputDTO(
-        restaurantName = restaurantOutputDTO.name,
-        distance = restaurantOutputDTO.distance,
-        customerRating = restaurantOutputDTO.customerRating,
-        price = restaurantOutputDTO.price,
-        cuisineName = restaurantOutputDTO.cuisine.name
-    )
 }
