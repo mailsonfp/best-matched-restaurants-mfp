@@ -20,7 +20,8 @@ data class SearchMetric(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long ? = null,
 
-    val searchDateTime: LocalDateTime = LocalDateTime.now(),
+    @Column(name = "search_timestamp")
+    val searchTimestamp: LocalDateTime = LocalDateTime.now(),
 
     val clientIp: String,
 
@@ -40,7 +41,7 @@ data class SearchMetric(
 
 fun SearchMetric.toDTO() = SearchMetricOutputDTO (
     id = this.id,
-    searchDateTime = this.searchDateTime,
+    searchTimestamp = this.searchTimestamp,
     clientIp = this.clientIp,
     userAgent = this.userAgent,
     referrer = this.referrer,
@@ -50,7 +51,7 @@ fun SearchMetric.toDTO() = SearchMetricOutputDTO (
 
 fun SearchMetricOutputDTO.toEntity() = SearchMetric (
     id = this.id,
-    searchDateTime = this.searchDateTime,
+    searchTimestamp = this.searchTimestamp,
     clientIp = this.clientIp,
     userAgent = this.userAgent,
     referrer = this.referrer,

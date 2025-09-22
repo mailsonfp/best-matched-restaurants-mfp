@@ -3,7 +3,7 @@ package com.mailson.pereira.tech.assessment.input.message.consumer.dto
 import java.time.LocalDateTime
 
 data class MessageInputDTO(
-    val searchDateTime: LocalDateTime,
+    val searchTimestamp: LocalDateTime,
     val searchClientIp: String,
     val searchUserAgent: String? = null,
     val searchReferrer: String? = null,

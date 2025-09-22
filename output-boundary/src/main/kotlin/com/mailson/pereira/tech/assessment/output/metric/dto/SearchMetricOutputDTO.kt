@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 
 data class SearchMetricOutputDTO(
     val id: Long ? = null,
-    val searchDateTime: LocalDateTime = LocalDateTime.now(),
+    val searchTimestamp: LocalDateTime = LocalDateTime.now(),
     val clientIp: String,
     val userAgent: String? = null,
     val referrer: String? = null,
