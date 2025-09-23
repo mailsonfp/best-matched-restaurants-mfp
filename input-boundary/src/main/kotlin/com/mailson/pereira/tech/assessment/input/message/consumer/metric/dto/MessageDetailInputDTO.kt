@@ -1,4 +1,4 @@
-package com.mailson.pereira.tech.assessment.input.message.consumer.dto
+package com.mailson.pereira.tech.assessment.input.message.consumer.metric.dto
 
 data class MessageDetailInputDTO (
     val paramKey: String,

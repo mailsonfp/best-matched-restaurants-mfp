@@ -1,8 +1,8 @@
 package com.mailson.pereira.tech.assessment.service.mapper
 
 import com.mailson.pereira.tech.assessment.entities.enums.ParamTypeEnum
-import com.mailson.pereira.tech.assessment.input.message.consumer.dto.MessageDetailInputDTO
-import com.mailson.pereira.tech.assessment.input.message.consumer.dto.MessageInputDTO
+import com.mailson.pereira.tech.assessment.input.message.consumer.metric.dto.MessageDetailInputDTO
+import com.mailson.pereira.tech.assessment.input.message.consumer.metric.dto.MessageInputDTO
 import com.mailson.pereira.tech.assessment.output.metric.dto.SearchMetricDetailOutputDTO
 import com.mailson.pereira.tech.assessment.output.metric.dto.SearchMetricOutputDTO
 import org.mapstruct.Mapper

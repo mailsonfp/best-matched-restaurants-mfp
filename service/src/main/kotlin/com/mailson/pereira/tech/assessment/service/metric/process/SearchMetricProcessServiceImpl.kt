@@ -1,7 +1,7 @@
-package com.mailson.pereira.tech.assessment.service.search.metric.process
+package com.mailson.pereira.tech.assessment.service.metric.process
 
-import com.mailson.pereira.tech.assessment.input.message.consumer.SearchMetricProcessService
-import com.mailson.pereira.tech.assessment.input.message.consumer.dto.MessageInputDTO
+import com.mailson.pereira.tech.assessment.input.message.consumer.metric.SearchMetricProcessService
+import com.mailson.pereira.tech.assessment.input.message.consumer.metric.dto.MessageInputDTO
 import com.mailson.pereira.tech.assessment.output.metric.SearchMetricDetailRepository
 import com.mailson.pereira.tech.assessment.output.metric.SearchMetricRepository
 import com.mailson.pereira.tech.assessment.service.mapper.SearchMetricMapper
@@ -13,7 +13,7 @@ class SearchMetricProcessServiceImpl(
     private val searchMetricRepository: SearchMetricRepository,
     private val searchMetricDetailRepository: SearchMetricDetailRepository,
     private val searchMetricMapper: SearchMetricMapper
-):SearchMetricProcessService {
+): SearchMetricProcessService {
 
     private val logger = LoggerFactory.getLogger(this::class.java)
 
