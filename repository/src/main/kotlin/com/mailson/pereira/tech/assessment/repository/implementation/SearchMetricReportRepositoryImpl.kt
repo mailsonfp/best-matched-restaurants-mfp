@@ -1,9 +1,8 @@
 package com.mailson.pereira.tech.assessment.repository.implementation
 
 import com.mailson.pereira.tech.assessment.entities.enums.SummarizeDataTypeEnum
+import com.mailson.pereira.tech.assessment.entities.extensions.toLocalDateTimeWithPeriodTypeAndParamType
 import com.mailson.pereira.tech.assessment.output.metric.SearchMetricReportRepository
-import com.mailson.pereira.tech.assessment.output.metric.SearchMetricRepository
-import com.mailson.pereira.tech.assessment.output.metric.dto.SearchMetricOutputDTO
 import com.mailson.pereira.tech.assessment.output.metric.projection.AverageDataProjectionDTO
 import com.mailson.pereira.tech.assessment.repository.domain.SearchMetric
 import com.mailson.pereira.tech.assessment.repository.jpa.specification.SearchMetricSpecifications
@@ -12,8 +11,10 @@ import jakarta.persistence.PersistenceContext
 import jakarta.persistence.criteria.CriteriaQuery
 import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.Root
+import org.springframework.stereotype.Component
 import java.time.LocalDateTime
 
+@Component
 class SearchMetricReportRepositoryImpl(
     @PersistenceContext
     private val entityManager: EntityManager
@@ -21,8 +22,8 @@ class SearchMetricReportRepositoryImpl(
 
     override fun summarizeByPeriod(
         type: SummarizeDataTypeEnum,
-        start: LocalDateTime,
-        end: LocalDateTime
+        start: String,
+        end: String
     ): List<AverageDataProjectionDTO> {
         val cb = entityManager.criteriaBuilder
         val query: CriteriaQuery<AverageDataProjectionDTO> = cb.createQuery(AverageDataProjectionDTO::class.java)
@@ -48,7 +49,11 @@ class SearchMetricReportRepositoryImpl(
             )
         )
 
-        query.where(cb.between(root.get<LocalDateTime>("searchTimestamp"), start, end))
+        query.where(cb.between(
+            root.get<LocalDateTime>("searchTimestamp"),
+            start.toLocalDateTimeWithPeriodTypeAndParamType(type,true),
+            end.toLocalDateTimeWithPeriodTypeAndParamType(type,false))
+        )
         query.groupBy(groupExpr)
         query.orderBy(cb.asc(groupExpr))
 

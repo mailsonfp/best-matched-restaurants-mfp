@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 interface SearchMetricReportRepository {
     fun summarizeByPeriod(
         type: SummarizeDataTypeEnum,
-        start: LocalDateTime,
-        end: LocalDateTime
+        start: String,
+        end: String
     ): List<AverageDataProjectionDTO>
 }
