@@ -5,17 +5,9 @@ import com.mailson.pereira.tech.assessment.repository.domain.SearchMetric
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.Root
-import org.springframework.data.jpa.domain.Specification
 import java.time.LocalDateTime
 
-object SearchMetricSpecifications {
-
-    fun withDateRange(start: LocalDateTime, end: LocalDateTime): Specification<SearchMetric> {
-        return Specification { root, _, cb ->
-            cb.between(root.get("searchTimestamp"), start, end)
-        }
-    }
-
+object SearchMetricSpecification {
     fun groupByPeriod(summarizePeriodType: SummarizeDataTypeEnum): (CriteriaBuilder, Root<SearchMetric>) -> Expression<String> {
         return when (summarizePeriodType) {
             SummarizeDataTypeEnum.DAY -> { cb, root ->
