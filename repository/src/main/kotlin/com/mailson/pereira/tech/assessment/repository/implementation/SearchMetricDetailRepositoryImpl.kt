@@ -13,7 +13,7 @@ class SearchMetricDetailRepositoryImpl(
 ): SearchMetricDetailRepository {
 
     override fun save(searchMetricDetailOutputDTO: SearchMetricDetailOutputDTO): SearchMetricDetailOutputDTO {
-        return searchMetricDetailJPARepository.save(searchMetricDetailOutputDTO.toEntity()).toDTO()
+        return searchMetricDetailJPARepository.saveAndFlush(searchMetricDetailOutputDTO.toEntity()).toDTO()
     }
 
     override fun saveList(searchMetricDetailList: List<SearchMetricDetailOutputDTO>): List<SearchMetricDetailOutputDTO> {

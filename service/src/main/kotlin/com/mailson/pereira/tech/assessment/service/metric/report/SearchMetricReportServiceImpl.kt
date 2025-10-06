@@ -8,6 +8,10 @@ import com.mailson.pereira.tech.assessment.input.metric.report.dto.MetricSearchD
 import com.mailson.pereira.tech.assessment.input.metric.report.dto.MetricSearchDetailDataResponseDTO
 import com.mailson.pereira.tech.assessment.input.metric.report.dto.MetricSearchDetailItemDataResponseDTO
 import com.mailson.pereira.tech.assessment.output.metric.SearchMetricReportRepository
+import com.mailson.pereira.tech.assessment.output.metric.projection.AverageDataProjectionDTO
+import com.mailson.pereira.tech.assessment.output.metric.projection.AverageMetricDetailDataProjectionDTO
+import com.mailson.pereira.tech.assessment.output.metric.projection.TopParamKeyAndValueMetricDetailProjectionDTO
+import com.mailson.pereira.tech.assessment.output.metric.projection.TopParamKeyMetricDetailProjectionDTO
 import org.springframework.stereotype.Service
 import java.time.DateTimeException
 import java.time.LocalDate
@@ -52,61 +56,20 @@ class SearchMetricReportServiceImpl(
             finalPeriod
         )
 
-        val allPeriods = (metricSearchData.map { it.period } +
-                averageNumericParamsByPeriodList.map { it.period } +
-                topParamKeyByPeriodList.map { it.period } +
-                topParamKeyValueByPeriod.map { it.period })
-            .toSet()
+        val allPeriods = buildPeriodsSet(
+            metricSearchData,
+            averageNumericParamsByPeriodList,
+            topParamKeyByPeriodList,
+            topParamKeyValueByPeriod
+        )
 
-        return allPeriods.map { period ->
-
-            val summary = metricSearchData.find { it.period == period }
-            val avgItems = averageNumericParamsByPeriodList.filter { it.period == period }.map {
-                MetricSearchDetailItemDataResponseDTO(
-                    paramKey = it.paramKey,
-                    average = it.average
-                )
-            }
-
-            val topKeyItems = topParamKeyByPeriodList.filter { it.period == period }.map {
-                MetricSearchDetailItemDataResponseDTO(
-                    paramKey = it.paramKey,
-                    total = it.total
-                )
-            }
-
-            val topKeyValueItems = topParamKeyValueByPeriod.filter { it.period == period }.map {
-                MetricSearchDetailItemDataResponseDTO(
-                    paramKey = it.paramKey,
-                    paramValue = it.paramValue,
-                    total = it.total
-                )
-            }
-
-            val searchMetricSummary = summary?.let {
-                MetricSearchDataResponseDTO(
-                    totalSearch = it.total,
-                    withResultMatched = it.withResult,
-                    withoutResultMatched = it.withoutResult
-                )
-            }
-
-            val searchMetricDetail = if (
-                avgItems.isNotEmpty() || topKeyItems.isNotEmpty() || topKeyValueItems.isNotEmpty()
-            ) {
-                MetricSearchDetailDataResponseDTO(
-                    numericDetailParamsAverageInformation = avgItems,
-                    topParamKeySearchedInformation = topKeyItems,
-                    topParamKeyAndParamValueSearchedInformation = topKeyValueItems
-                )
-            } else null
-
-            MetricReportResponseDTO(
-                period = period,
-                searchMetricSummaryInformation = searchMetricSummary,
-                searchMetricDetailSummaryInformation = searchMetricDetail
-            )
-        }.sortedBy { it.period }
+        return buildMetricResponse(
+            allPeriods,
+            metricSearchData,
+            averageNumericParamsByPeriodList,
+            topParamKeyByPeriodList,
+            topParamKeyValueByPeriod
+        )
     }
 
     override fun validateReportParams(
@@ -164,5 +127,73 @@ class SearchMetricReportServiceImpl(
         if (errors.isNotEmpty()) {
             throw InvalidReportParamsException(errors.joinToString(";"))
         }
+    }
+    private fun buildPeriodsSet(
+        metricSearchData: List<AverageDataProjectionDTO>,
+        averageNumericParamsByPeriodList: List<AverageMetricDetailDataProjectionDTO>,
+        topParamKeyByPeriodList: List<TopParamKeyMetricDetailProjectionDTO>,
+        topParamKeyValueByPeriod: List<TopParamKeyAndValueMetricDetailProjectionDTO>
+    ) = (metricSearchData.map { it.period } +
+            averageNumericParamsByPeriodList.map { it.period } +
+            topParamKeyByPeriodList.map { it.period } +
+            topParamKeyValueByPeriod.map { it.period })
+        .toSet()
+
+    private fun buildMetricResponse(
+        allPeriods: Set<String>,
+        metricSearchData: List<AverageDataProjectionDTO>,
+        averageNumericParamsByPeriodList: List<AverageMetricDetailDataProjectionDTO>,
+        topParamKeyByPeriodList: List<TopParamKeyMetricDetailProjectionDTO>,
+        topParamKeyValueByPeriod: List<TopParamKeyAndValueMetricDetailProjectionDTO>
+    ): List<MetricReportResponseDTO> {
+        return allPeriods.map { period ->
+
+            val summary = metricSearchData.find { it.period == period }
+            val avgItems = averageNumericParamsByPeriodList.filter { it.period == period }.map {
+                MetricSearchDetailItemDataResponseDTO(
+                    paramKey = it.paramKey,
+                    average = it.average
+                )
+            }
+
+            val topKeyItems = topParamKeyByPeriodList.filter { it.period == period }.map {
+                MetricSearchDetailItemDataResponseDTO(
+                    paramKey = it.paramKey,
+                    total = it.total
+                )
+            }
+
+            val topKeyValueItems = topParamKeyValueByPeriod.filter { it.period == period }.map {
+                MetricSearchDetailItemDataResponseDTO(
+                    paramKey = it.paramKey,
+                    paramValue = it.paramValue,
+                    total = it.total
+                )
+            }
+
+            val searchMetricSummary = summary?.let {
+                MetricSearchDataResponseDTO(
+                    totalSearch = it.total,
+                    withResultMatched = it.withResult,
+                    withoutResultMatched = it.withoutResult
+                )
+            }
+
+            val searchMetricDetail = if (
+                avgItems.isNotEmpty() || topKeyItems.isNotEmpty() || topKeyValueItems.isNotEmpty()
+            ) {
+                MetricSearchDetailDataResponseDTO(
+                    numericDetailParamsAverageInformation = avgItems,
+                    topParamKeySearchedInformation = topKeyItems,
+                    topParamKeyAndParamValueSearchedInformation = topKeyValueItems
+                )
+            } else null
+
+            MetricReportResponseDTO(
+                period = period,
+                searchMetricSummaryInformation = searchMetricSummary,
+                searchMetricDetailSummaryInformation = searchMetricDetail
+            )
+        }.sortedBy { it.period }
     }
 }

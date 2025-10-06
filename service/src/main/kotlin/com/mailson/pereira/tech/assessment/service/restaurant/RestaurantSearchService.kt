@@ -99,41 +99,51 @@ class RestaurantSearchService(
         searchResult: List<RestaurantMatchedResponseInputDTO>,
         httpServletRequest: HttpServletRequest
     ) {
+
         val paramsList = arrayListOf<MessageDetailOutputDTO>()
-        when {
-            restaurantName != null -> paramsList.add(
+
+        if(!restaurantName.isNullOrBlank()) {
+            paramsList.add(
                 MessageDetailOutputDTO(
                     paramKey = ParamKeyEnum.RESTAURANT_NAME.paramName,
                     paramValue = restaurantName,
                     paramType = ParamKeyEnum.RESTAURANT_NAME.paramType.name,
                 )
             )
+        }
 
-            distance != null -> paramsList.add(
+        distance?.let {
+            paramsList.add(
                 MessageDetailOutputDTO(
                     paramKey = ParamKeyEnum.DISTANCE.paramName,
-                    paramValue = distance.toString(),
+                    paramValue = it.toString(),
                     paramType = ParamKeyEnum.DISTANCE.paramType.name,
                 )
             )
+        }
 
-            customerRating != null -> paramsList.add(
+        customerRating?.let {
+            paramsList.add(
                 MessageDetailOutputDTO(
                     paramKey = ParamKeyEnum.CUSTOMER_RATING.paramName,
                     paramValue = customerRating.toString(),
                     paramType = ParamKeyEnum.CUSTOMER_RATING.paramType.name,
                 )
             )
+        }
 
-            price != null -> paramsList.add(
+        price?.let {
+            paramsList.add(
                 MessageDetailOutputDTO(
                     paramKey = ParamKeyEnum.PRICE.paramName,
                     paramValue = price.toString(),
                     paramType = ParamKeyEnum.PRICE.paramType.name,
                 )
             )
+        }
 
-            cuisineName != null -> paramsList.add(
+        if(!cuisineName.isNullOrBlank()) {
+            paramsList.add(
                 MessageDetailOutputDTO(
                     paramKey = ParamKeyEnum.CUISINE_NAME.paramName,
                     paramValue = cuisineName.toString(),
