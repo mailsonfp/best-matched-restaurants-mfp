@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,7 +40,8 @@ class RestaurantSearchController(
         @RequestParam(name = "price", required = false) price: BigDecimal?,
 
         @Parameter(description = "Cuisine name (e.g., Chinese, American, sent as RequestParam)", required = false)
-        @RequestParam(name = "cuisineName", required = false) cuisineName: String?
+        @RequestParam(name = "cuisineName", required = false) cuisineName: String?,
+        httpServletRequest: HttpServletRequest
     ): ResponseEntity<List<RestaurantMatchedResponseInputDTO>> {
         return ResponseEntity.ok(
             searchService.findBestMatchedRestaurants(
@@ -47,7 +49,8 @@ class RestaurantSearchController(
                 distance,
                 customerRating,
                 price,
-                cuisineName
+                cuisineName,
+                httpServletRequest
             )
         )
     }

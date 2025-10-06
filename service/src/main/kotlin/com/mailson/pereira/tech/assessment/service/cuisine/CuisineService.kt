@@ -1,29 +1,31 @@
 package com.mailson.pereira.tech.assessment.service.cuisine
 
+import com.mailson.pereira.tech.assessment.input.cuisine.CuisineInput
 import com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineRequestInputDTO
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineAlreadyExistsException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineLinkedWithRestaurantException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineNotFoundException
 import com.mailson.pereira.tech.assessment.output.cuisine.CuisineRepository
-import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
+import com.mailson.pereira.tech.assessment.service.mapper.CuisineMapper
 import org.springframework.stereotype.Service
 
 @Service
 class CuisineService(
-    private val cuisineRepository: CuisineRepository
-): com.mailson.pereira.tech.assessment.input.cuisine.CuisineInput {
+    private val cuisineRepository: CuisineRepository,
+    private val cuisineMapper: CuisineMapper
+): CuisineInput {
     override fun save(request: CuisineRequestInputDTO): com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO {
         val alreadyExistsCuisine = cuisineRepository.getByName(request.name)
 
         if (alreadyExistsCuisine!=null)
             throw CuisineAlreadyExistsException(request.name)
 
-        return toCuisineResponseInputDTO(cuisineRepository.save(toCuisineOutputDTO(request)))
+        return cuisineMapper.toResponseDTO(cuisineRepository.save(cuisineMapper.toOutputDTO(request)))
     }
 
     override fun getAll(): List<com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO> {
         return cuisineRepository.getAll().map {
-            toCuisineResponseInputDTO(it)
+            cuisineMapper.toResponseDTO(it)
         }
     }
 
@@ -37,14 +39,4 @@ class CuisineService(
 
         cuisineRepository.delete(checkCuisineExists)
     }
-
-    private fun toCuisineOutputDTO(request: CuisineRequestInputDTO) = CuisineOutputDTO(
-        name = request.name
-    )
-
-    private fun toCuisineResponseInputDTO(cuisineOutputDTO: CuisineOutputDTO) =
-        com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO(
-            id = cuisineOutputDTO.id!!,
-            name = cuisineOutputDTO.name
-        )
 }

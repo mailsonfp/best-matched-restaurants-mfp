@@ -9,11 +9,13 @@ import javax.sql.DataSource
 class DataSourceConfig {
 
     @Bean
-    fun dataSource(): DataSource =
-        DataSourceBuilder.create()
+    fun dataSource(): DataSource {
+
+        return DataSourceBuilder.create()
             .url(System.getenv("SPRING_DATASOURCE_URL"))
             .username(System.getenv("SPRING_DATASOURCE_USERNAME"))
             .password(System.getenv("SPRING_DATASOURCE_PASSWORD"))
             .driverClassName("org.postgresql.Driver")
             .build()
+    }
 }

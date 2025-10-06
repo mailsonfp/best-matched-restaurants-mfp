@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineAlreadyExistsException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineLinkedWithRestaurantException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineNotFoundException
+import com.mailson.pereira.tech.assessment.input.exceptions.InvalidReportParamsException
 import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsException
 import com.mailson.pereira.tech.assessment.input.exceptions.RestaurantAlreadyExistsException
 import com.mailson.pereira.tech.assessment.input.exceptions.RestaurantIdNotFoundException
@@ -156,6 +157,33 @@ open class ExceptionHandler(
             statusCode = HttpStatus.NOT_FOUND.value(),
             messageCodeTitle = "restaurant.error.invalid-search-params.title",
             messageCode = "restaurant.error.invalid-search-params.message",
+            fieldErrors = fieldErrorsList,
+            messageParam = exception.message!!
+        )
+
+        return ResponseEntity(genericException, HttpStatus.NOT_FOUND)
+    }
+
+    // handle cuisine already exists exception
+    @ExceptionHandler(value = [InvalidReportParamsException::class])
+    protected fun handleInvalidReportParamsException(
+        exception: InvalidReportParamsException,
+        request: WebRequest
+    ): ResponseEntity<GenericException> {
+
+        val fieldErrorsList = arrayListOf<GenericExceptionFieldError>()
+        val errorsMessages = exception.message?.split(";")
+        errorsMessages?.forEach {
+            fieldErrorsList.add(GenericExceptionFieldError(
+                field = "param",
+                message = it
+            ))
+        }
+
+        val genericException = getGenericException(
+            statusCode = HttpStatus.NOT_FOUND.value(),
+            messageCodeTitle = "metric.error.invalid-report-params.title",
+            messageCode = "metric.error.invalid-report-params.message",
             fieldErrors = fieldErrorsList,
             messageParam = exception.message!!
         )

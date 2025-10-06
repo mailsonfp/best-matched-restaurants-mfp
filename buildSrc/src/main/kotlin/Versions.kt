@@ -17,6 +17,9 @@ object Versions {
     const val mockitoKotlin = "4.0.0"
     const val junit = "5.8.1"
     const val javaVersion = 21
+    const val hibernateTypes = "2.21.1"
+    const val gson = "2.6.2"
+    const val mapStruct = "1.5.5.Final"
 
     //project
     const val projectMainClassName = "com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplication"

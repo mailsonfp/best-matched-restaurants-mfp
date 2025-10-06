@@ -7,9 +7,21 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+  rabbitmq:
+    host: ${SPRING_RABBITMQ_HOST}
+    port: ${SPRING_RABBITMQ_PORT}
+    username: ${SPRING_RABBITMQ_USERNAME}
+    password: ${SPRING_RABBITMQ_PASSWORD}
+
 springdoc:
   packages-to-scan: com.mailson.pereira.tech.assessment.web
   swagger-ui:
     path: /swagger-ui.html
   api:
     title: "Application for tech assessment"
+
+rabbitmq:
+  restaurant-search-queue: restaurant.search.queue
+  restaurant-search-exchange: restaurant.search.exchange
+  restaurant-search-queue-dlq: restaurant.search.queue.dlq
+  restaurant-search-exchange-dlq: restaurant.search.exchange.dlq

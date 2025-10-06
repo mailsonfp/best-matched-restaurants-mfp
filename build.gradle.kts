@@ -1,6 +1,7 @@
 plugins {
 	kotlin("jvm") version Versions.kotlin
 	kotlin("plugin.spring") version Versions.kotlin
+	kotlin("kapt") version Versions.kotlin
 	id("org.springframework.boot") version Versions.springBoot
 	id("io.spring.dependency-management") version Versions.springDependencyManagement
 	kotlin("plugin.jpa") version Versions.kotlin
@@ -25,12 +26,15 @@ subprojects {
 		apply(plugin = "org.jetbrains.kotlin.plugin.noarg")
 		apply(plugin = "org.jetbrains.kotlin.jvm")
 		apply(plugin = "kotlin-allopen")
+		apply(plugin = "org.jetbrains.kotlin.kapt")
 	}
 
 	dependencies {
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-amqp:${Versions.springBoot}")
+
 
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${Versions.jacksonKotlin}")
 		implementation("org.jetbrains.kotlin:kotlin-reflect:${Versions.kotlin}")
@@ -45,6 +49,12 @@ subprojects {
 		implementation("ch.qos.logback:logback-classic:${Versions.logback}")
 		implementation("ch.qos.logback.contrib:logback-json-classic:${Versions.logbackContrib}")
 		implementation("ch.qos.logback.contrib:logback-jackson:${Versions.logbackContrib}")
+
+		implementation("com.vladmihalcea:hibernate-types-60:${Versions.hibernateTypes}")
+		implementation("com.google.code.gson:gson:${Versions.gson}")
+
+		implementation("org.mapstruct:mapstruct:${Versions.mapStruct}")
+		kapt("org.mapstruct:mapstruct-processor:${Versions.mapStruct}")
 
 		runtimeOnly("org.postgresql:postgresql:${Versions.postgres}")
 
@@ -71,5 +81,13 @@ subprojects {
 	tasks.withType<Test> {
 		useJUnitPlatform()
 	}
+
+	tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+		kotlinOptions {
+			jvmTarget = Versions.javaVersion.toString()
+			freeCompilerArgs = listOf("-Xjsr305=strict")
+		}
+	}
+
 }
 

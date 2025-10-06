@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    kotlin("plugin.spring") version Versions.kotlin
 }
 
 group = "com.mailson.pereira.tech.assessment"
@@ -12,6 +13,8 @@ repositories {
 tasks.test {
     useJUnitPlatform()
 }
+
 kotlin {
+    apply(plugin = "kotlin-allopen")
     jvmToolchain(Versions.javaVersion)
 }
