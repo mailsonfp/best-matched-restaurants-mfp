@@ -11,7 +11,7 @@ interface RestaurantSearchInput {
         customerRating: Int?,
         price: BigDecimal?,
         cuisineName: String?,
-        httpServletRequest: HttpServletRequest
+        httpServletRequest: HttpServletRequest?
     ): List<RestaurantMatchedResponseInputDTO>
     fun validateRestaurantSearchParams(
         restaurantName: String?,

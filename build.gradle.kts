@@ -56,7 +56,7 @@ subprojects {
 		implementation("org.mapstruct:mapstruct:${Versions.mapStruct}")
 		kapt("org.mapstruct:mapstruct-processor:${Versions.mapStruct}")
 
-		runtimeOnly("org.postgresql:postgresql:${Versions.postgres}")
+		implementation("org.postgresql:postgresql:${Versions.postgres}")
 
 		testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Versions.kotlin}")
