@@ -58,6 +58,13 @@ subprojects {
 
 		implementation("org.postgresql:postgresql:${Versions.postgres}")
 
+		implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-data-redis:${Versions.springBoot}")
+		implementation("io.jsonwebtoken:jjwt-api:${Versions.jsonWebToken}")
+
+		runtimeOnly("io.jsonwebtoken:jjwt-impl:${Versions.jsonWebToken}")
+		runtimeOnly("io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebToken}")
+
 		testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Versions.kotlin}")
 		testImplementation("org.junit.jupiter:junit-jupiter-api:${Versions.junit}")

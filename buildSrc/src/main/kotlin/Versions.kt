@@ -20,6 +20,7 @@ object Versions {
     const val hibernateTypes = "2.21.1"
     const val gson = "2.6.2"
     const val mapStruct = "1.5.5.Final"
+    const val jsonWebToken = "0.11.5"
 
     //project
     const val projectMainClassName = "com.mailson.pereira.tech.assessment.MailsonPereiraTechAssessmentApplication"
