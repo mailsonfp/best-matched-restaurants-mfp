@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets
 import java.util.Date
 
 @Component
-class JwtUtil {
+class JwtUtils {
     private val key = Keys.hmacShaKeyFor(
         "my-super-secret-key-1234567890-abcdef".toByteArray(StandardCharsets.UTF_8)
     )
