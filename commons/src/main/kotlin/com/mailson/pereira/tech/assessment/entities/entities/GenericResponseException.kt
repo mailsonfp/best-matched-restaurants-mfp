@@ -1,4 +1,4 @@
-package com.mailson.pereira.tech.assessment.web.exceptionhandler.dto
+package com.mailson.pereira.tech.assessment.entities.entities
 
 import com.fasterxml.jackson.annotation.JsonInclude
 

@@ -5,7 +5,6 @@ import com.mailson.pereira.tech.assessment.entities.utils.JwtUtils
 import com.mailson.pereira.tech.assessment.entities.utils.RedisUtils
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -13,7 +12,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 class SecurityConfig(
     private val jwtUtils: JwtUtils,
-    private val redisUtils: RedisUtils
+    private val redisUtils: RedisUtils,
+    private val customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
 ) {
 
     @Bean
@@ -27,6 +27,10 @@ class SecurityConfig(
                     .anyRequest().authenticated()
             }
             .addFilterBefore(JwtFilter(jwtUtils, redisUtils), UsernamePasswordAuthenticationFilter::class.java)
+            .exceptionHandling{ exceptions ->
+                exceptions
+                    .authenticationEntryPoint(customAuthenticationEntryPoint)
+            }
 
         return http.build()
     }
