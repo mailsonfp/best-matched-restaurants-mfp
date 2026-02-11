@@ -13,7 +13,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class SecurityConfig(
     private val jwtUtils: JwtUtils,
     private val redisUtils: RedisUtils,
-    private val customAuthenticationEntryPoint: CustomAuthenticationEntryPoint
+    private val customAuthenticationEntryPoint: CustomAuthenticationEntryPoint,
+    private val customAccessDeniedHandler: CustomAccessDeniedHandler
 ) {
 
     @Bean
@@ -21,16 +22,19 @@ class SecurityConfig(
         http
             .csrf { it.disable() }
             .authorizeHttpRequests{ auth ->
-                auth.requestMatchers("/v1/authentication/**").permitAll()
-                    .requestMatchers("/v1/metric").permitAll()
-                    .requestMatchers("/api/**").permitAll()
+                auth.requestMatchers("/v*/authentication/**").permitAll()
+                    .requestMatchers("/metric").permitAll()
+                    .requestMatchers("/v*/restaurants/search/**").hasAuthority("RESTAURANT_SEARCH")
+                    .requestMatchers("/v*/restaurants/maintenance/**").hasAuthority("RESTAURANT_MAINTENANCE")
                     .anyRequest().authenticated()
             }
-            .addFilterBefore(JwtFilter(jwtUtils, redisUtils), UsernamePasswordAuthenticationFilter::class.java)
             .exceptionHandling{ exceptions ->
                 exceptions
                     .authenticationEntryPoint(customAuthenticationEntryPoint)
+                    .accessDeniedHandler(customAccessDeniedHandler)
+
             }
+            .addFilterBefore(JwtFilter(jwtUtils, redisUtils), UsernamePasswordAuthenticationFilter::class.java)
 
         return http.build()
     }

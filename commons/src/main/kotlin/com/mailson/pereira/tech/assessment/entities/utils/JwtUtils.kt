@@ -1,5 +1,6 @@
 package com.mailson.pereira.tech.assessment.entities.utils
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -13,9 +14,13 @@ class JwtUtils {
         "my-super-secret-key-1234567890-abcdef".toByteArray(StandardCharsets.UTF_8)
     )
 
-    fun generateToken(userName: String): String {
+    fun generateToken(
+        userName: String,
+        authorities: List<String>
+    ): String {
         return Jwts.builder()
             .setSubject(userName)
+            .claim("authorities", authorities)
             .setIssuedAt(Date())
             .setExpiration(Date(System.currentTimeMillis() + 1800000))
             .signWith(key, SignatureAlgorithm.HS256)
@@ -30,6 +35,18 @@ class JwtUtils {
                 .parseClaimsJws(token)
                 .body
             claims.subject
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    fun getClaims(token: String): Claims? {
+        return try {
+            Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .body
         } catch (e: Exception) {
             null
         }
