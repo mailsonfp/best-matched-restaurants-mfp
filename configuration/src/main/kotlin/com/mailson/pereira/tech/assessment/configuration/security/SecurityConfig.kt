@@ -26,6 +26,7 @@ class SecurityConfig(
                     .requestMatchers("/metric").permitAll()
                     .requestMatchers("/v*/restaurants/search/**").hasAuthority("RESTAURANT_SEARCH")
                     .requestMatchers("/v*/restaurants/maintenance/**").hasAuthority("RESTAURANT_MAINTENANCE")
+                    .requestMatchers("/v*/cuisine/**").hasAuthority("CUISINE_MAINTENANCE")
                     .anyRequest().authenticated()
             }
             .exceptionHandling{ exceptions ->
