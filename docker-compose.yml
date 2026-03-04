@@ -7,9 +7,15 @@ services:
     volumes:
       - redis_data:/data
     restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq-server
     restart: no
     ports:
       - 5672:5672
@@ -20,6 +26,11 @@ services:
     volumes:
       - rabbitmqdata:/var/lib/rabbitmq/
       - ./configs/rabbitmq/enabled_plugins:/etc/rabbitmqdata/enabled_plugins
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   db:
     image: postgres:17.6
@@ -32,23 +43,35 @@ services:
       - "5432:5432"
     volumes:
       - dbdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U restaurantDBUser -d restaurantsdb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-#  app:
-#    build: .
-#    container_name: best-matched-restaurants-app
-#    depends_on:
-#      - db
-#    ports:
-#      - "8080:8080"
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurantsdb
-#      SPRING_DATASOURCE_USERNAME: restaurantDBUser
-#      SPRING_DATASOURCE_PASSWORD: restaurant2025
-#      SPRING_RABBITMQ_HOST: rabbitmq
-#      SPRING_RABBITMQ_PORT: 5672
-#      SPRING_RABBITMQ_USERNAME: rabbitmq
-#      SPRING_RABBITMQ_PASSWORD: rabbitmq
-#    restart: always
+  app:
+    build: .
+    container_name: best-matched-restaurants-app
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/restaurantsdb
+      SPRING_DATASOURCE_USERNAME: restaurantDBUser
+      SPRING_DATASOURCE_PASSWORD: restaurant2025
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: rabbitmq
+      SPRING_RABBITMQ_PASSWORD: rabbitmq
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+    restart: always
 
 volumes:
   dbdata:
