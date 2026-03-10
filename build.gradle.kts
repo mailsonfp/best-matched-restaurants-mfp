@@ -32,6 +32,7 @@ subprojects {
 	dependencies {
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-amqp:${Versions.springBoot}")
 

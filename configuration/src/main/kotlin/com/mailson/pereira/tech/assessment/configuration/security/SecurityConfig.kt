@@ -23,7 +23,10 @@ class SecurityConfig(
             .csrf { it.disable() }
             .authorizeHttpRequests{ auth ->
                 auth.requestMatchers("/v*/authentication/**").permitAll()
-                    .requestMatchers("/metric").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+                    .requestMatchers("/v3/api-docs/**").permitAll()
+                    .requestMatchers("/actuator/**").permitAll()
+                    .requestMatchers("/v*/metric/**").hasAuthority("METRIC_REPORT")
                     .requestMatchers("/v*/restaurants/search/**").hasAuthority("RESTAURANT_SEARCH")
                     .requestMatchers("/v*/restaurants/maintenance/**").hasAuthority("RESTAURANT_MAINTENANCE")
                     .requestMatchers("/v*/cuisine/**").hasAuthority("CUISINE_MAINTENANCE")

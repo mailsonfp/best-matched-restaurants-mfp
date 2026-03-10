@@ -62,10 +62,16 @@ curl --location 'http://localhost:8082/v1/authentication/login' \
 "userName": "{username}",
 "authorities": [
 "RESTAURANT_MAINTENANCE",
+"CUISINE_MAINTENANCE",
 "RESTAURANT_SEARCH",
-"CUISINE_MAINTENANCE"
+"METRIC_REPORT"
 ]
 }'
+The authorities:  
+- "RESTAURANT_MAINTENANCE" for restaurant crud
+- "CUISINE_MAINTENANCE" for cuisine crud
+- "RESTAURANT_SEARCH" for search and get the best matched restaurants
+- "METRIC_REPORT" for metric reports
  
 To test the solution, I used to ways:  
 swagger: http://localhost:8082/swagger-ui/index.html#/  
@@ -75,7 +81,7 @@ postman: collection with all endpoints created
 &emsp;location: ..files/postman-collection/  
 &emsp;file: tech-assessment.postman_collection.json - 2.1 Postman Collection  
 API to find the best matched restaurants:  
-http://localhost:8082/v1/restaurants/search - with the request parameters as description in the brief
+http://localhost:8082/v1/restaurants/search - check on swagger for search parameters information.
 
 I also created test classes for the services classes  
 location: module service src/test/kotlin, package com.mailson.pereira.tech.assessment.service
