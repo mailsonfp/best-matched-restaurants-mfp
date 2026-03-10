@@ -29,3 +29,16 @@ rabbitmq:
   restaurant-search-exchange: restaurant.search.exchange
   restaurant-search-queue-dlq: restaurant.search.queue.dlq
   restaurant-search-exchange-dlq: restaurant.search.exchange.dlq
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  health:
+    db:
+      enabled: true
+    redis:
+      enabled: true
+    rabbit:
+      enabled: true
