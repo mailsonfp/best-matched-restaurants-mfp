@@ -32,6 +32,7 @@ subprojects {
 	dependencies {
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-web:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-actuator:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-validation:${Versions.springBoot}")
 		implementation("org.springframework.boot:spring-boot-starter-amqp:${Versions.springBoot}")
 
@@ -56,7 +57,14 @@ subprojects {
 		implementation("org.mapstruct:mapstruct:${Versions.mapStruct}")
 		kapt("org.mapstruct:mapstruct-processor:${Versions.mapStruct}")
 
-		runtimeOnly("org.postgresql:postgresql:${Versions.postgres}")
+		implementation("org.postgresql:postgresql:${Versions.postgres}")
+
+		implementation("org.springframework.boot:spring-boot-starter-security:${Versions.springBoot}")
+		implementation("org.springframework.boot:spring-boot-starter-data-redis:${Versions.springBoot}")
+		implementation("io.jsonwebtoken:jjwt-api:${Versions.jsonWebToken}")
+
+		runtimeOnly("io.jsonwebtoken:jjwt-impl:${Versions.jsonWebToken}")
+		runtimeOnly("io.jsonwebtoken:jjwt-jackson:${Versions.jsonWebToken}")
 
 		testImplementation("org.springframework.boot:spring-boot-starter-test:${Versions.springBoot}")
 		testImplementation("org.jetbrains.kotlin:kotlin-test-junit5:${Versions.kotlin}")

@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation(project(":input-boundary"))
+    implementation(project(":commons"))
 }
 
 tasks.test {

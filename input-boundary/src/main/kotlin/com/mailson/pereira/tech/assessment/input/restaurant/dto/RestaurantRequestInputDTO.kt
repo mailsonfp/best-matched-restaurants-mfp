@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotBlank
 import java.math.BigDecimal
 
 data class RestaurantRequestInputDTO(
+    val restauranId: Long? = null,
+
     @field:NotBlank(message = "may not be blank")
     val restaurantName:String,
 

@@ -21,7 +21,7 @@ import java.net.URI
 
 @Tag(name = "Restaurant Maintenance", description = "API for managing restaurant maintenance operations")
 @RestController
-@RequestMapping(value = ["v1/restaurant/maintenance"], produces = [MediaType.APPLICATION_JSON_VALUE])
+@RequestMapping(value = ["v1/restaurants/maintenance"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class RestaurantMaintenanceController(
     private val restaurantMaintenanceService: RestaurantMaintenanceInput
 ) {

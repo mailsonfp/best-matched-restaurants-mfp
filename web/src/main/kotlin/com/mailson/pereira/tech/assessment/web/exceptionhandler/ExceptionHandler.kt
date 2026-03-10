@@ -1,6 +1,8 @@
 package com.mailson.pereira.tech.assessment.web.exceptionhandler
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.mailson.pereira.tech.assessment.entities.entities.GenericException
+import com.mailson.pereira.tech.assessment.entities.entities.GenericExceptionFieldError
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineAlreadyExistsException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineLinkedWithRestaurantException
 import com.mailson.pereira.tech.assessment.input.exceptions.CuisineNotFoundException
@@ -9,8 +11,6 @@ import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsE
 import com.mailson.pereira.tech.assessment.input.exceptions.RestaurantAlreadyExistsException
 import com.mailson.pereira.tech.assessment.input.exceptions.RestaurantIdNotFoundException
 import com.mailson.pereira.tech.assessment.input.exceptions.RestaurantNotFoundException
-import com.mailson.pereira.tech.assessment.web.exceptionhandler.dto.GenericException
-import com.mailson.pereira.tech.assessment.web.exceptionhandler.dto.GenericExceptionFieldError
 import org.slf4j.LoggerFactory
 import org.springframework.beans.TypeMismatchException
 import org.springframework.context.MessageSource
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Locale
 
 @ControllerAdvice
 open class ExceptionHandler(

@@ -10,6 +10,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    implementation(project(":commons"))
+}
+
 tasks.test {
     useJUnitPlatform()
 }

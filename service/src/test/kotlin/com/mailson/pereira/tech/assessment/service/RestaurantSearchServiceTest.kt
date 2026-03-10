@@ -6,6 +6,7 @@ import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
 import com.mailson.pereira.tech.assessment.output.restaurant.dto.RestaurantOutputDTO
 import com.mailson.pereira.tech.assessment.service.restaurant.RestaurantSearchService
+import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -52,7 +53,8 @@ class RestaurantSearchServiceTest {
             distance,
             customerRating,
             price,
-            cuisineName
+            cuisineName,
+            null
         )
 
         assertEquals(1, result.size)
@@ -74,7 +76,8 @@ class RestaurantSearchServiceTest {
                 distance,
                 customerRating,
                 price,
-                cuisineName
+                cuisineName,
+                null
             )
         }
     }
@@ -84,7 +87,7 @@ class RestaurantSearchServiceTest {
         val searchParams = RestaurantSearchParamsDTO(distance = 20)
 
         assertThrows<InvalidSearchParamsException> {
-            restaurantSearchService.isValidateRestaurantSearchParams(
+            restaurantSearchService.validateRestaurantSearchParams(
                 restaurantName = null,
                 distance = 20,
                 customerRating = null,
@@ -99,7 +102,7 @@ class RestaurantSearchServiceTest {
         val searchParams = RestaurantSearchParamsDTO(customerRating = 6)
 
         assertThrows<InvalidSearchParamsException> {
-            restaurantSearchService.isValidateRestaurantSearchParams(
+            restaurantSearchService.validateRestaurantSearchParams(
                 restaurantName = null,
                 distance = null,
                 customerRating = 6,
@@ -112,7 +115,7 @@ class RestaurantSearchServiceTest {
     @Test
     fun `should throw InvalidSearchParamsException when price is out of range`() {
         assertThrows<InvalidSearchParamsException> {
-            restaurantSearchService.isValidateRestaurantSearchParams(
+            restaurantSearchService.validateRestaurantSearchParams(
                 restaurantName = null,
                 distance = null,
                 customerRating = null,
@@ -120,24 +123,5 @@ class RestaurantSearchServiceTest {
                 cuisineName = null
             )
         }
-    }
-
-    @Test
-    fun `should validate search parameters correctly`() {
-        val restaurantName = "Valid Restaurant"
-        val distance = 5
-        val customerRating = 4
-        val price = BigDecimal(30)
-        val cuisineName = "Italian"
-
-        val result = restaurantSearchService.isValidateRestaurantSearchParams(
-            restaurantName,
-            distance,
-            customerRating,
-            price,
-            cuisineName
-        )
-
-        assertTrue(result)
     }
 }

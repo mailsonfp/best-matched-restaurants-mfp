@@ -14,9 +14,9 @@ class OpenAPIConfiguration {
         return OpenAPI()
             .info(
                 Info()
-                    .title("Mailson Fernando Pereira - Tech assessment")
+                    .title("Mailson Fernando Pereira - Laboratory Project")
                     .version("v1")
-                    .description("Project for Tech assessment")
+                    .description("Project for tests")
             )
     }
 }

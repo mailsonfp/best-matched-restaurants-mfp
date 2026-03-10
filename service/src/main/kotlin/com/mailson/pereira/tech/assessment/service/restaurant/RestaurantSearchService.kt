@@ -28,7 +28,7 @@ class RestaurantSearchService(
         customerRating: Int?,
         price: BigDecimal?,
         cuisineName: String?,
-        httpServletRequest: HttpServletRequest
+        httpServletRequest: HttpServletRequest?
     ): List<RestaurantMatchedResponseInputDTO> {
         validateRestaurantSearchParams(
             restaurantName,
@@ -97,7 +97,7 @@ class RestaurantSearchService(
         price: BigDecimal?,
         cuisineName: String?,
         searchResult: List<RestaurantMatchedResponseInputDTO>,
-        httpServletRequest: HttpServletRequest
+        httpServletRequest: HttpServletRequest?
     ) {
 
         val paramsList = arrayListOf<MessageDetailOutputDTO>()
@@ -154,8 +154,8 @@ class RestaurantSearchService(
 
         val searchMetricMessage = MessageOutputDTO(
             searchClientIp = extractClientIp(httpServletRequest),
-            searchUserAgent = httpServletRequest.getHeader("User-Agent"),
-            searchReferrer = httpServletRequest.getHeader("Referer"),
+            searchUserAgent = httpServletRequest?.getHeader("User-Agent"),
+            searchReferrer = httpServletRequest?.getHeader("Referer"),
             searchResultCount = searchResult.size,
             searchOtherMetadata = gson.toJson(searchResult),
             searchParams = paramsList
@@ -164,8 +164,9 @@ class RestaurantSearchService(
         messageOutput.sendMessageToSearchQueue(searchMetricMessage)
     }
 
-    private fun extractClientIp(request: HttpServletRequest): String {
-        return request.getHeader("X-Forwarded-For")?.split(",")?.firstOrNull()?.trim()
+    private fun extractClientIp(request: HttpServletRequest?): String {
+        return if(request != null ) request.getHeader("X-Forwarded-For")?.split(",")?.firstOrNull()?.trim()
             ?: request.remoteAddr
+        else ""
     }
 }

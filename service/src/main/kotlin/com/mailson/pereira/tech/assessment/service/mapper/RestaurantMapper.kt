@@ -11,12 +11,13 @@ import org.mapstruct.Mapping
 @Mapper(componentModel = "spring", uses = [CuisineMapper::class])
 interface RestaurantMapper {
 
-    @Mapping(source = "cuisine", target = "cuisineName")
+    @Mapping(source = "cuisine.name", target = "cuisineName")
     fun toInputDTO(outputDTO: RestaurantOutputDTO): RestaurantResponseInputDTO
 
     @Mapping(source = "cuisineName", target = "cuisine")
     fun toOutputDTO(inputDTO: RestaurantResponseInputDTO): RestaurantOutputDTO
 
+    @Mapping(source = "request.restauranId", target = "id")
     @Mapping(source = "request.restaurantName", target = "name")
     @Mapping(source = "request.distance", target = "distance")
     @Mapping(source = "request.customerRating", target = "customerRating")

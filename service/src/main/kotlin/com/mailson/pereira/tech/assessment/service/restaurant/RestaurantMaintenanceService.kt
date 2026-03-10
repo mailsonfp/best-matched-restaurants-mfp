@@ -20,7 +20,7 @@ class RestaurantMaintenanceService(
     private val cuisineRepository: CuisineRepository,
     private val restaurantMapper: RestaurantMapper
 ): RestaurantMaintenanceInput {
-    override fun save(request: RestaurantRequestInputDTO): com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO {
+    override fun save(request: RestaurantRequestInputDTO): RestaurantResponseInputDTO {
         val existingCuisine = cuisineRepository.getByName(request.cuisineName) ?: throw CuisineNotFoundException(request.cuisineName)
 
         val existingRestaurantWithName = restaurantRepository.getByName(request.restaurantName)
