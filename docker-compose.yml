@@ -73,6 +73,20 @@ services:
       SPRING_REDIS_PORT: 6379
     restart: always
 
+  frontend:
+    image: node:24-alpine
+    container_name: app-frontend
+    working_dir: /app-frontend
+    volumes:
+      - ./react-frontend:/app-frontend
+    ports:
+      - "3000:3000"
+    command: sh -c "npm install && npm start"
+    depends_on:
+      - app
+    restart: always
+
+
 volumes:
   dbdata:
   rabbitmqdata:
