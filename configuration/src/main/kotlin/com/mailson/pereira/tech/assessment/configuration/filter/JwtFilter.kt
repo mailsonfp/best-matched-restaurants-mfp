@@ -32,14 +32,7 @@ class JwtFilter(
                 val storedToken = redisUtils.getValue("token:$username")
                 if (storedToken == token) {
                     // extrai authorities do claim "authorities"
-                    val authoritiesClaim = claims["authorities"]
-
-                    val authorities = when (authoritiesClaim) {
-                        is List<*> -> authoritiesClaim.map { SimpleGrantedAuthority(it.toString()) }
-                        is String -> listOf(SimpleGrantedAuthority(authoritiesClaim))
-                        else -> emptyList()
-                    }
-
+                    val authorities = parseAuthorities(claims["authorities"])
                     val auth = UsernamePasswordAuthenticationToken(username, null, authorities)
                     SecurityContextHolder.getContext().authentication = auth
                 }
@@ -49,4 +42,11 @@ class JwtFilter(
 
         filterChain.doFilter(request, response)
     }
+
+    fun parseAuthorities(claim: Any?): List<SimpleGrantedAuthority> =
+        when (claim) {
+            is Collection<*> -> claim.map { SimpleGrantedAuthority(it.toString()) }
+            is String -> claim.split(",").map { SimpleGrantedAuthority(it.trim()) }
+            else -> emptyList()
+        }
 }
