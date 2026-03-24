@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: head"></head>
+<body>
+<div th:replace="fragments/header :: header"></div>
+
+<section>
+    <h2>Token Gerado</h2>
+    <p th:text="${token}"></p>
+</section>
+
+<div th:replace="fragments/footer :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+<div class="container">
+    <h2>Login</h2>
+    <form th:action="@{/v1/authentication/login}" method="post">
+        <label for="userName">Username:</label>
+        <input type="text" id="userName" name="userName" required/>
+
+        <label for="authorities">Authorities (comma separated):</label>
+        <input type="text" id="authorities" name="authorities" required/>
+
+        <button type="submit">Login</button>
+    </form>
+</div>
+</body>
+</html>

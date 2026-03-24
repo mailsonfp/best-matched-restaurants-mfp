@@ -1,3 +1,4 @@
+# === BACKEND (Spring Boot / Gradle / Kotlin) ===
 HELP.md
 .gradle
 build/
@@ -39,8 +40,38 @@ out/
 ### Kotlin ###
 .kotlin
 
-#h2
+# H2 database
 /data
 
+# Outros arquivos
 *.csv
 *.bkp
+
+
+# === FRONTEND (React) ===
+# Node modules
+react-frontend/node_modules/
+react-frontend/.npm/
+react-frontend/.yarn/
+
+# Build output
+react-frontend/build/
+
+# Logs
+react-frontend/npm-debug.log*
+react-frontend/yarn-debug.log*
+react-frontend/yarn-error.log*
+
+# Editor configs
+react-frontend/.idea/
+react-frontend/.vscode/
+react-frontend/.DS_Store
+
+# Coverage reports
+react-frontend/coverage/
+
+# Misc
+react-frontend/.env.local
+react-frontend/.env.development.local
+react-frontend/.env.test.local
+react-frontend/.env.production.local
