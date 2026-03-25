@@ -16,7 +16,7 @@ class WebLoginController(
 ) {
     @GetMapping("/login")
     fun showLoginPage(model: Model): String {
-        return "v1/authentication/web/login" // renderiza login.html
+        return "login" // renderiza login.html
     }
 
     @PostMapping("/login")

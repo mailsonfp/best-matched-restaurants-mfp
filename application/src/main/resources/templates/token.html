@@ -1,14 +1,31 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: head"></head>
-<body>
-<div th:replace="fragments/header :: header"></div>
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/header :: header}"></div>
 
-<section>
-    <h2>Token Gerado</h2>
-    <p th:text="${token}"></p>
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="mb-0">Token Gerado</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">
+                            <code class="text-break" th:text="${token}"></code>
+                        </p>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary">Voltar para Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

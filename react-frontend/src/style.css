@@ -1,0 +1,60 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  max-width: 600px;
+  margin: 50px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.login-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-form button {
+  padding: 10px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #005a9e;
+}
+
+.token-display p {
+  word-break: break-all;       /* quebra mesmo sem espaços */
+  overflow-wrap: anywhere;     /* força quebra em qualquer ponto */
+  white-space: pre-wrap;       /* permite quebra e mantém espaços */
+  font-family: monospace;      /* facilita leitura */
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.token-text {
+  word-break: break-all;       /* quebra mesmo sem espaços */
+  overflow-wrap: anywhere;     /* força quebra em qualquer ponto */
+  white-space: pre-wrap;       /* permite quebra e mantém espaços */
+  font-family: monospace;      /* facilita leitura */
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+}

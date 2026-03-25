@@ -1,21 +1,34 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Login</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
-</head>
-<body>
-<div class="container">
-    <h2>Login</h2>
-    <form th:action="@{/v1/authentication/login}" method="post">
-        <label for="userName">Username:</label>
-        <input type="text" id="userName" name="userName" required/>
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/header :: header}"></div>
 
-        <label for="authorities">Authorities (comma separated):</label>
-        <input type="text" id="authorities" name="authorities" required/>
+<section class="mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Login</h2>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/v1/authentication/web/login}" method="post">
+                        <div class="mb-3">
+                            <label for="userName" class="form-label">Username:</label>
+                            <input type="text" id="userName" name="userName" class="form-control" required/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="authorities" class="form-label">Authorities (comma separated):</label>
+                            <input type="text" id="authorities" name="authorities" class="form-control" required/>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-        <button type="submit">Login</button>
-    </form>
-</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

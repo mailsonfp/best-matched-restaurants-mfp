@@ -74,18 +74,16 @@ services:
     restart: always
 
   frontend:
-    image: node:24-alpine
+    build:
+      context: ./react-frontend
+      dockerfile: Dockerfile
     container_name: app-frontend
-    working_dir: /app-frontend
-    volumes:
-      - ./react-frontend:/app-frontend
     ports:
       - "3000:3000"
-    command: sh -c "npm install && npm start"
-    depends_on:
-      - app
+    volumes:
+      - ./react-frontend/src:/app/src
+      - ./react-frontend/public:/app/public
     restart: always
-
 
 volumes:
   dbdata:
