@@ -14,12 +14,13 @@
                     </div>
                     <div class="card-body">
                         <p class="mb-0">
-                            <code class="text-break" th:text="${token}"></code>
+                            <code id="tokenText" class="text-break" th:text="${token}"></code>
                         </p>
                     </div>
                 </div>
                 <div class="text-center mt-3">
-                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary">Voltar para Login</a>
+                    <button type="button" class="btn btn-secondary me-2" onclick="copyToken()">Copy Token</button>
+                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary">Go Back to Login</a>
                 </div>
             </div>
         </div>
@@ -27,5 +28,16 @@
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+function copyToken() {
+    const tokenText = document.getElementById('tokenText').textContent;
+    navigator.clipboard.writeText(tokenText).then(() => {
+        alert('Token copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy token. Please copy manually.');
+    });
+}
+</script>
 </body>
 </html>

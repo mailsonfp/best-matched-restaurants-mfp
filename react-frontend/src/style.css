@@ -39,6 +39,19 @@ body {
   background-color: #005a9e;
 }
 
+.btn-secondary {
+  padding: 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
 .token-display p {
   word-break: break-all;       /* quebra mesmo sem espaços */
   overflow-wrap: anywhere;     /* força quebra em qualquer ponto */
@@ -57,4 +70,56 @@ body {
   background: #f4f4f4;
   padding: 10px;
   border-radius: 4px;
+  color: red;
+}
+
+.authorities-container {
+  display: flex;
+  gap: 15px;
+  margin: 15px 0;
+  align-items: flex-start;
+}
+
+.authorities-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.authorities-list label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+}
+
+.authorities-list select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: Arial, sans-serif;
+  min-height: 120px;
+}
+
+.authorities-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  min-width: 100px;
+  height: 120px;
+}
+
+.authorities-buttons button {
+  padding: 10px;
+  background-color: #0078d7;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.authorities-buttons button:hover {
+  background-color: #005a9e;
 }

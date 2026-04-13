@@ -1,5 +1,6 @@
 package com.mailson.pereira.tech.assessment.web.thymeleaf
 
+import com.mailson.pereira.tech.assessment.entities.enums.AuthoritiesEnum
 import com.mailson.pereira.tech.assessment.input.authentication.AuthenticationService
 import com.mailson.pereira.tech.assessment.input.authentication.dto.AuthenticationParamsRequestDTO
 import org.springframework.stereotype.Controller
@@ -16,6 +17,7 @@ class WebLoginController(
 ) {
     @GetMapping("/login")
     fun showLoginPage(model: Model): String {
+        model.addAttribute("authorities", AuthoritiesEnum.values())
         return "login" // renderiza login.html
     }
 

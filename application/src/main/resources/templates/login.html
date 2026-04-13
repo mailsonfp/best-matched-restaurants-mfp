@@ -18,8 +18,23 @@
                             <input type="text" id="userName" name="userName" class="form-control" required/>
                         </div>
                         <div class="mb-3">
-                            <label for="authorities" class="form-label">Authorities (comma separated):</label>
-                            <input type="text" id="authorities" name="authorities" class="form-control" required/>
+                            <label class="form-label">Authorities:</label>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <label for="available" class="form-label">Available:</label>
+                                    <select id="available" class="form-control" multiple size="4">
+                                        <option th:each="auth : ${authorities}" th:value="${auth.name()}" th:text="${auth.name()}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 text-center d-flex flex-column justify-content-center">
+                                    <button type="button" id="addBtn" class="btn btn-primary mb-2">Add >></button>
+                                    <button type="button" id="removeBtn" class="btn btn-primary">Remove <<</button>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="selected" class="form-label">Selected:</label>
+                                    <select id="selected" name="authorities" class="form-control" multiple size="4" required></select>
+                                </div>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Login</button>
                     </form>
@@ -30,5 +45,32 @@
 </section>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+    document.getElementById('addBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        moveOptions('available', 'selected');
+    });
+    document.getElementById('removeBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        moveOptions('selected', 'available');
+    });
+    function moveOptions(fromId, toId) {
+        const from = document.getElementById(fromId);
+        const to = document.getElementById(toId);
+        const selectedOptions = Array.from(from.selectedOptions);
+        selectedOptions.forEach(option => {
+            // Se movendo para "selected", adiciona o atributo selected
+            if (toId === 'selected') {
+                option.setAttribute('selected', 'selected');
+            } else {
+                // Se movendo para "available", remove o atributo selected
+                option.removeAttribute('selected');
+            }
+            to.appendChild(option);
+        });
+        // Limpa a seleção após mover
+        from.selectedIndex = -1;
+    }
+</script>
 </body>
 </html>
