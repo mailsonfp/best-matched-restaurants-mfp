@@ -1,6 +1,6 @@
 import React from "react";
 
-function TokenDisplay({ token }) {
+function TokenDisplay({ token, onSearch }) {
   const copyToken = () => {
     navigator.clipboard.writeText(token).then(() => {
       alert('Token copied to clipboard!');
@@ -12,14 +12,17 @@ function TokenDisplay({ token }) {
 
   return (
     <div className="token-display">
-      <h2>Token Gerado</h2>
+      <h2>Generated Token</h2>
       {token ? (
         <>
           <p className="token-text">{token}</p>
-          <button className="btn btn-secondary me-2" onClick={copyToken}>Copy Token</button>
+          <div className="token-actions">
+            <button className="btn-secondary" onClick={copyToken}>Copy Token</button>
+            <button className="btn-primary" onClick={onSearch}>Restaurants Search</button>
+          </div>
         </>
       ) : (
-        <p>Nenhum token gerado ainda.</p>
+        <p>No token generated yet.</p>
       )}
     </div>
   );

@@ -90,9 +90,10 @@ function LoginForm({ setToken }) {
             multiple
             size="4"
             required
+            value={selectedAuthorities}
           >
             {selectedAuthorities.map(auth => {
-              return <option key={auth} value={auth} selected>{auth}</option>;
+              return <option key={auth} value={auth}>{auth}</option>;
             })}
           </select>
         </div>
