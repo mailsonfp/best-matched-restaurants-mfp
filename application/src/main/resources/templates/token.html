@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section class="mt-4 mb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h2 class="mb-0">Token Gerado</h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">
+                            <code id="tokenText" class="text-break" th:text="${token}"></code>
+                        </p>
+                    </div>
+                </div>
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-secondary me-2" onclick="copyToken()">Copy Token</button>
+                    <a th:href="@{/v1/authentication/web/restaurants-search}" class="btn btn-primary me-2" onclick="storeToken()">Restaurants Search</a>
+                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary" onclick="clearStoredToken()">Go Back to Login</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script>
+function storeToken() {
+    const tokenText = document.getElementById('tokenText').textContent;
+    sessionStorage.setItem('authToken', tokenText);
+}
+
+function clearStoredToken() {
+    sessionStorage.removeItem('authToken');
+}
+
+function copyToken() {
+    const tokenText = document.getElementById('tokenText').textContent;
+    navigator.clipboard.writeText(tokenText).then(() => {
+        alert('Token copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy: ', err);
+        alert('Failed to copy token. Please copy manually.');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', storeToken);
+</script>
+</body>
+</html>

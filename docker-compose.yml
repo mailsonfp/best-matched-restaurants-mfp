@@ -73,6 +73,18 @@ services:
       SPRING_REDIS_PORT: 6379
     restart: always
 
+  frontend:
+    build:
+      context: ./react-frontend
+      dockerfile: Dockerfile
+    container_name: app-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./react-frontend/src:/app/src
+      - ./react-frontend/public:/app/public
+    restart: always
+
 volumes:
   dbdata:
   rabbitmqdata:
