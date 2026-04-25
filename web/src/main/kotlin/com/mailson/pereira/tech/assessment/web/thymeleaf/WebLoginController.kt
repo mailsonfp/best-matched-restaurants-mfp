@@ -17,7 +17,7 @@ class WebLoginController(
 ) {
     @GetMapping("/login")
     fun showLoginPage(model: Model): String {
-        model.addAttribute("authorities", AuthoritiesEnum.values())
+        model.addAttribute("authorities", AuthoritiesEnum.entries)
         return "login" // renderiza login.html
     }
 
@@ -30,6 +30,11 @@ class WebLoginController(
         val tokenMap = authenticationService.generateToken(AuthenticationParamsRequestDTO(userName, ArrayList(authorities)))
         model.addAttribute("token", tokenMap["token"])
         return "token" // renderiza token.html
+    }
+
+    @GetMapping("/restaurants-search")
+    fun showRestaurantsSearchPage(): String {
+        return "restaurant-search"
     }
 
 }

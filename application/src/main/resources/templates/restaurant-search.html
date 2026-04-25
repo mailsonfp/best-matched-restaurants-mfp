@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments/header :: header}"></div>
+
+<section class="mt-4 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h2 class="mb-0 text-white">Restaurants Search</h2>
+                    <button id="logoutBtn" type="button" class="btn btn-danger btn-sm">Logout</button>
+                </div>
+                <div class="card-body">
+                    <form id="searchForm">
+                        <div class="mb-3">
+                            <label for="restaurantName" class="form-label">Restaurant Name:</label>
+                            <input type="text" id="restaurantName" class="form-control" placeholder="Optional" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="distance" class="form-label">Distance (miles):</label>
+                            <div class="range-header">
+                                <span id="distanceValue">Not set</span>
+                            </div>
+                            <div class="range-with-button">
+                                <input type="range" id="distance" min="1" max="10" step="1" value="1" class="form-range" />
+                                <button id="clearDistanceBtn" type="button" class="btn btn-outline-secondary btn-sm">Clear</button>
+                            </div>
+                            <div class="range-scale">
+                                <span>1</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Customer Rating (stars):</label>
+                            <div class="range-header">
+                                <span id="ratingValue">Not set</span>
+                            </div>
+                            <div id="starRating" class="star-rating" role="radiogroup" aria-label="Customer rating">
+                                <button type="button" class="star-btn" data-value="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
+                                <button type="button" class="star-btn" data-value="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
+                                <button type="button" class="star-btn" data-value="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
+                                <button type="button" class="star-btn" data-value="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
+                                <button type="button" class="star-btn" data-value="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
+                                <button id="clearRatingBtn" type="button" class="btn btn-outline-secondary btn-sm ms-2">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="price" class="form-label">Average Price per Person ($):</label>
+                            <div class="range-header">
+                                <span id="priceValue">Not set</span>
+                            </div>
+                            <div class="range-with-button">
+                                <input type="range" id="price" min="10" max="50" step="1" value="10" class="form-range" />
+                                <button id="clearPriceBtn" type="button" class="btn btn-outline-secondary btn-sm">Clear</button>
+                            </div>
+                            <div class="range-scale">
+                                <span>$10</span>
+                                <span>$50</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="cuisineName" class="form-label">Cuisine Name:</label>
+                            <input type="text" id="cuisineName" class="form-control" placeholder="e.g., Chinese, American" />
+                        </div>
+
+                        <div class="search-actions">
+                            <button type="submit" id="searchBtn" class="btn btn-primary">Search</button>
+                            <button type="button" id="clearSearchBtn" class="btn btn-secondary">Clear Search</button>
+                        </div>
+
+                        <p id="validationError" class="validation-error d-none">Please fill in at least one search parameter</p>
+                    </form>
+
+                    <p id="searchHint" class="search-hint">Fill the parameters to find the best matched restaurants</p>
+                    <p id="errorMessage" class="error-message d-none"></p>
+
+                    <div id="resultsContainer" class="results-container d-none">
+                        <p id="noResultsMessage" class="no-results d-none">Sorry, no restaurants found matching your criteria</p>
+
+                        <div class="table-responsive">
+                            <table id="resultsTable" class="table restaurants-table d-none">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Distance (mi)</th>
+                                    <th>Rating</th>
+                                    <th>Price per Person</th>
+                                    <th>Cuisine</th>
+                                </tr>
+                                </thead>
+                                <tbody id="resultsBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+(function() {
+    const token = sessionStorage.getItem("authToken");
+
+    if (!token) {
+        window.location.href = "/v1/authentication/web/login";
+        return;
+    }
+
+    const API_BASE_URL = "/v1/restaurants/search";
+
+    const form = document.getElementById("searchForm");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const searchBtn = document.getElementById("searchBtn");
+    const clearSearchBtn = document.getElementById("clearSearchBtn");
+
+    const restaurantNameInput = document.getElementById("restaurantName");
+    const distanceInput = document.getElementById("distance");
+    const priceInput = document.getElementById("price");
+    const cuisineNameInput = document.getElementById("cuisineName");
+
+    const distanceValue = document.getElementById("distanceValue");
+    const priceValue = document.getElementById("priceValue");
+    const ratingValue = document.getElementById("ratingValue");
+
+    const clearDistanceBtn = document.getElementById("clearDistanceBtn");
+    const clearPriceBtn = document.getElementById("clearPriceBtn");
+    const clearRatingBtn = document.getElementById("clearRatingBtn");
+
+    const starButtons = Array.from(document.querySelectorAll(".star-btn"));
+
+    const validationError = document.getElementById("validationError");
+    const searchHint = document.getElementById("searchHint");
+    const errorMessage = document.getElementById("errorMessage");
+    const resultsContainer = document.getElementById("resultsContainer");
+    const noResultsMessage = document.getElementById("noResultsMessage");
+    const resultsTable = document.getElementById("resultsTable");
+    const resultsBody = document.getElementById("resultsBody");
+
+    let submitted = false;
+    let selectedDistance = "";
+    let selectedPrice = "";
+    let customerRating = "";
+    let redirecting = false;
+
+    function clearNodeChildren(node) {
+        while (node.firstChild) {
+            node.removeChild(node.firstChild);
+        }
+    }
+
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove("d-none");
+    }
+
+    function showWarning(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove("d-none", "error-message");
+        errorMessage.classList.add("warning-message");
+    }
+
+    function hideError() {
+        errorMessage.textContent = "";
+        errorMessage.classList.add("d-none");
+        errorMessage.classList.remove("warning-message");
+        errorMessage.classList.add("error-message");
+    }
+
+    function hideResults() {
+        resultsContainer.classList.add("d-none");
+        noResultsMessage.classList.add("d-none");
+        resultsTable.classList.add("d-none");
+        clearNodeChildren(resultsBody);
+    }
+
+    function hasSearchParams() {
+        return (
+            restaurantNameInput.value.trim() !== "" ||
+            cuisineNameInput.value.trim() !== "" ||
+            selectedDistance !== "" ||
+            selectedPrice !== "" ||
+            customerRating !== ""
+        );
+    }
+
+    function updateValidation() {
+        if (submitted && !hasSearchParams()) {
+            validationError.classList.remove("d-none");
+        } else {
+            validationError.classList.add("d-none");
+        }
+    }
+
+    function updateDistanceLabel() {
+        distanceValue.textContent = selectedDistance === "" ? "Not set" : selectedDistance + " mi";
+    }
+
+    function updatePriceLabel() {
+        priceValue.textContent = selectedPrice === "" ? "Not set" : "$" + selectedPrice;
+    }
+
+    function updateStars() {
+        starButtons.forEach(function(button) {
+            const value = parseInt(button.getAttribute("data-value"), 10);
+            const selected = customerRating !== "" && value <= customerRating;
+            button.classList.toggle("selected", selected);
+            button.setAttribute("aria-checked", customerRating === value ? "true" : "false");
+        });
+
+        if (customerRating === "") {
+            ratingValue.textContent = "Not set";
+        } else {
+            ratingValue.textContent = customerRating + (customerRating === 1 ? " star selected" : " stars selected");
+        }
+    }
+
+    function resetSearchState() {
+        restaurantNameInput.value = "";
+        cuisineNameInput.value = "";
+        selectedDistance = "";
+        selectedPrice = "";
+        customerRating = "";
+
+        distanceInput.value = "1";
+        priceInput.value = "10";
+
+        updateDistanceLabel();
+        updatePriceLabel();
+        updateStars();
+
+        submitted = false;
+        searchHint.classList.remove("d-none");
+
+        updateValidation();
+        hideError();
+        hideResults();
+    }
+
+    function redirectToLogin() {
+        sessionStorage.removeItem("authToken");
+        window.location.href = "/v1/authentication/web/login";
+    }
+
+    logoutBtn.addEventListener("click", redirectToLogin);
+
+    distanceInput.addEventListener("input", function() {
+        selectedDistance = parseInt(distanceInput.value, 10);
+        updateDistanceLabel();
+        updateValidation();
+    });
+
+    priceInput.addEventListener("input", function() {
+        selectedPrice = parseInt(priceInput.value, 10);
+        updatePriceLabel();
+        updateValidation();
+    });
+
+    clearDistanceBtn.addEventListener("click", function() {
+        selectedDistance = "";
+        distanceInput.value = "1";
+        updateDistanceLabel();
+        updateValidation();
+    });
+
+    clearPriceBtn.addEventListener("click", function() {
+        selectedPrice = "";
+        priceInput.value = "10";
+        updatePriceLabel();
+        updateValidation();
+    });
+
+    clearRatingBtn.addEventListener("click", function() {
+        customerRating = "";
+        updateStars();
+        updateValidation();
+    });
+
+    starButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            customerRating = parseInt(button.getAttribute("data-value"), 10);
+            updateStars();
+            updateValidation();
+        });
+    });
+
+    clearSearchBtn.addEventListener("click", resetSearchState);
+
+    form.addEventListener("submit", function(event) {
+        event.preventDefault();
+        submitted = true;
+        searchHint.classList.add("d-none");
+
+        if (!hasSearchParams()) {
+            updateValidation();
+            return;
+        }
+
+        updateValidation();
+        hideError();
+        hideResults();
+
+        const params = new URLSearchParams();
+
+        if (restaurantNameInput.value.trim() !== "") {
+            params.append("restaurantName", restaurantNameInput.value.trim());
+        }
+        if (selectedDistance !== "") {
+            params.append("distance", selectedDistance);
+        }
+        if (customerRating !== "") {
+            params.append("customerRating", customerRating);
+        }
+        if (selectedPrice !== "") {
+            params.append("price", selectedPrice);
+        }
+        if (cuisineNameInput.value.trim() !== "") {
+            params.append("cuisineName", cuisineNameInput.value.trim());
+        }
+
+        searchBtn.disabled = true;
+        searchBtn.textContent = "Searching...";
+
+        fetch(API_BASE_URL + "?" + params.toString(), {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token
+            }
+        }).then(function(response) {
+            if (!response.ok) {
+                return response.json().then(function(payload) {
+                    throw {
+                        status: response.status,
+                        payload: payload
+                    };
+                }).catch(function() {
+                    throw {
+                        status: response.status,
+                        payload: {}
+                    };
+                });
+            }
+            return response.json();
+        }).then(function(restaurants) {
+            resultsContainer.classList.remove("d-none");
+
+            if (!restaurants || restaurants.length === 0) {
+                noResultsMessage.classList.remove("d-none");
+                return;
+            }
+
+            resultsTable.classList.remove("d-none");
+
+            restaurants.forEach(function(restaurant) {
+                const row = document.createElement("tr");
+                row.innerHTML = "<td>" + restaurant.restaurantName + "</td>" +
+                    "<td>" + restaurant.distance + "</td>" +
+                    "<td>" + restaurant.customerRating + "</td>" +
+                    "<td>$" + restaurant.price + "</td>" +
+                    "<td>" + restaurant.cuisineName + "</td>";
+                resultsBody.appendChild(row);
+            });
+        }).catch(function(err) {
+            const status = err && err.status ? err.status : null;
+            const payload = err && err.payload ? err.payload : {};
+            const apiMessage = payload.messageDetail || payload.messageTitle;
+
+            if (status === 401) {
+                if (redirecting) {
+                    return;
+                }
+                redirecting = true;
+                showWarning("Your session has expired. You will be redirected to the login page.");
+                setTimeout(redirectToLogin, 2200);
+                return;
+            }
+
+            if (status === 403) {
+                showError(apiMessage || "You do not have permission to access this resource.");
+                return;
+            }
+
+            showError(apiMessage || "Error searching restaurants. Please try again.");
+        }).finally(function() {
+            if (!redirecting) {
+                searchBtn.disabled = false;
+                searchBtn.textContent = "Search";
+            }
+        });
+    });
+
+    updateDistanceLabel();
+    updatePriceLabel();
+    updateStars();
+})();
+</script>
+</body>
+</html>
+
+

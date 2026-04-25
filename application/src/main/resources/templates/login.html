@@ -46,6 +46,8 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
+    sessionStorage.removeItem('authToken');
+
     document.getElementById('addBtn').addEventListener('click', function(e) {
         e.preventDefault();
         moveOptions('available', 'selected');

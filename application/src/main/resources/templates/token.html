@@ -20,7 +20,8 @@
                 </div>
                 <div class="text-center mt-3">
                     <button type="button" class="btn btn-secondary me-2" onclick="copyToken()">Copy Token</button>
-                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary">Go Back to Login</a>
+                    <a th:href="@{/v1/authentication/web/restaurants-search}" class="btn btn-primary me-2" onclick="storeToken()">Restaurants Search</a>
+                    <a th:href="@{/v1/authentication/web/login}" class="btn btn-primary" onclick="clearStoredToken()">Go Back to Login</a>
                 </div>
             </div>
         </div>
@@ -29,6 +30,15 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script>
+function storeToken() {
+    const tokenText = document.getElementById('tokenText').textContent;
+    sessionStorage.setItem('authToken', tokenText);
+}
+
+function clearStoredToken() {
+    sessionStorage.removeItem('authToken');
+}
+
 function copyToken() {
     const tokenText = document.getElementById('tokenText').textContent;
     navigator.clipboard.writeText(tokenText).then(() => {
@@ -38,6 +48,8 @@ function copyToken() {
         alert('Failed to copy token. Please copy manually.');
     });
 }
+
+document.addEventListener('DOMContentLoaded', storeToken);
 </script>
 </body>
 </html>
