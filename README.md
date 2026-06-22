@@ -112,6 +112,77 @@ Available roles:
   - Login: `http://localhost:3000/login`
   - Frontend used for UI and API integration experiments.
 
+## Search Metrics, RabbitMQ and Reporting
+
+This project also contains a **laboratory flow for search metrics collection**.
+The idea was to validate the use of **RabbitMQ and queues** in an asynchronous scenario where restaurant searches generate events that can later be consolidated into reports.
+
+In a hypothetical production scenario, this metrics pipeline could be used to answer questions such as:
+
+- which search parameters are used most often;
+- which parameter combinations appear more frequently;
+- which searches return more restaurants;
+- which searches return no matches;
+- how search behavior changes by day, month, or year.
+
+### How the metrics flow works
+
+1. A restaurant search is executed, either directly via the search API or through the metric maintenance endpoint.
+2. The application collects the search parameters that were informed and the total number of matched restaurants returned by the search.
+3. This data is published asynchronously to RabbitMQ.
+4. A consumer listens to the search queue and processes the metric event.
+5. The consolidated data can then be queried through the reporting API.
+
+This approach keeps the search flow focused on the user response while delegating metric processing to an asynchronous pipeline.
+In the current configuration, this flow uses the RabbitMQ exchange `restaurant.search.exchange` and queue `restaurant.search.queue`, with a DLQ also configured for the laboratory scenario.
+
+### Metric generation endpoint
+
+For automated metric generation, the project exposes the endpoint:
+
+- `POST /v1/metric/maintenance`
+
+This endpoint was designed as a practical way to simulate search traffic and populate metric data through API automation tools such as Postman Runner.
+It accepts the same business filters used in restaurant search, including fields such as:
+
+- `restaurantName`
+- `distance`
+- `customerRating`
+- `price`
+- `cuisineName`
+- `searchDate`
+
+### Metric report endpoint
+
+Metric reports are obtained through `MetricReportController`:
+
+- `GET /v1/metric/report/average-data`
+
+The endpoint supports period-based report generation and returns summarized information such as total searches, searches with matches, searches without matches, average numeric parameters, most used parameter keys, and most frequent parameter key/value combinations.
+
+The Swagger documentation contains explanatory tags and descriptions for the metric endpoints, including guidance about accepted report parameters and expected period formats.
+
+### Automation with Postman Runner and CSV files
+
+It is possible to generate metric data through API automation.
+Inside `files/metric-data/`, there are CSV files that can be used as data sources in Postman Runner or in other automation strategies.
+
+Examples:
+
+- `files/metric-data/planilha_1.csv`
+- `files/metric-data/planilha_2.csv`
+- `files/metric-data/planilha_3.csv`
+
+These files follow the request structure expected by the metric generation flow and are useful for simulating repeated searches over different dates and filter combinations.
+
+Suggested lab flow:
+
+1. authenticate and obtain a JWT token;
+2. create or adapt a Postman request for `POST /v1/metric/maintenance`;
+3. run the request with one of the CSV files from `files/metric-data/`;
+4. after the messages are processed by RabbitMQ consumers, query `GET /v1/metric/report/average-data`;
+5. use Swagger tags and endpoint descriptions as a reference for the report parameters.
+
 ## Automated Tests
 
 Service tests are available at:
