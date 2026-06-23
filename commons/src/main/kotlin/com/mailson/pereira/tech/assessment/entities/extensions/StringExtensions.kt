@@ -3,6 +3,7 @@ package com.mailson.pereira.tech.assessment.entities.extensions
 import com.mailson.pereira.tech.assessment.entities.enums.SummarizeDataTypeEnum
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.YearMonth
 
 fun String.toLocalDateTimeWithPeriodTypeAndParamType(periodType: SummarizeDataTypeEnum, isInitialParam: Boolean): LocalDateTime {
@@ -25,4 +26,10 @@ fun String.toLocalDateTimeWithPeriodTypeAndParamType(periodType: SummarizeDataTy
             else LocalDate.of(this.toInt(), 12, 31).atTime(23, 59, 59)
         }
     }
+}
+
+fun String?.resolveSearchTimestamp(): LocalDateTime {
+    return if (this.isNullOrBlank()) {
+        return LocalDateTime.now()
+    } else LocalDate.parse(this).atTime(LocalTime.now())
 }

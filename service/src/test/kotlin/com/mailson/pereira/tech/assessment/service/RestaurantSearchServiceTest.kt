@@ -1,17 +1,20 @@
 package com.mailson.pereira.tech.assessment.service
 
+import com.google.gson.Gson
 import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsException
-import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantSearchParamsDTO
+import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
 import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
+import com.mailson.pereira.tech.assessment.output.message.producer.MessageOutputProducer
+import com.mailson.pereira.tech.assessment.output.message.producer.dto.MessageOutputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
 import com.mailson.pereira.tech.assessment.output.restaurant.dto.RestaurantOutputDTO
+import com.mailson.pereira.tech.assessment.service.mapper.RestaurantMapper
 import com.mailson.pereira.tech.assessment.service.restaurant.RestaurantSearchService
-import jakarta.servlet.http.HttpServletRequest
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
@@ -21,11 +24,37 @@ import java.math.BigDecimal
 @ExtendWith(MockitoExtension::class)
 class RestaurantSearchServiceTest {
 
+    private class CapturingMessageOutputProducer : MessageOutputProducer {
+        val sentMessages = mutableListOf<MessageOutputDTO>()
+
+        override fun sendMessageToSearchQueue(message: MessageOutputDTO) {
+            sentMessages.add(message)
+        }
+    }
+
     @Mock
     private lateinit var restaurantRepository: RestaurantRepository
 
-    @InjectMocks
+    @Mock
+    private lateinit var restaurantMapper: RestaurantMapper
+
+    private lateinit var messageOutput: CapturingMessageOutputProducer
+
+    @Mock
+    private lateinit var gson: Gson
+
     private lateinit var restaurantSearchService: RestaurantSearchService
+
+    @BeforeEach
+    fun setUp() {
+        messageOutput = CapturingMessageOutputProducer()
+        restaurantSearchService = RestaurantSearchService(
+            restaurantRepository = restaurantRepository,
+            restaurantMapper = restaurantMapper,
+            messageOutput = messageOutput,
+            gson = gson
+        )
+    }
 
     @Test
     fun `should return matched restaurants when search params are valid`() {
@@ -44,9 +73,18 @@ class RestaurantSearchServiceTest {
                 cuisine = CuisineOutputDTO(id = 1L, name = "Japanese")
             )
         )
+        val mappedRestaurant = RestaurantMatchedResponseInputDTO(
+            restaurantName = "Sushi House",
+            distance = 5,
+            customerRating = 4,
+            price = BigDecimal(30),
+            cuisineName = "Japanese"
+        )
 
         whenever(restaurantRepository.findBestMatchedRestaurants(anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull(), anyOrNull()))
             .thenReturn(matchedRestaurants)
+        whenever(restaurantMapper.toMatchedDTO(matchedRestaurants[0])).thenReturn(mappedRestaurant)
+        whenever(gson.toJson(listOf(mappedRestaurant))).thenReturn("[]")
 
         val result = restaurantSearchService.findBestMatchedRestaurants(
             restaurantName,
@@ -60,6 +98,7 @@ class RestaurantSearchServiceTest {
         assertEquals(1, result.size)
         assertEquals("Sushi House", result[0].restaurantName)
         assertEquals("Japanese", result[0].cuisineName)
+        assertEquals(1, messageOutput.sentMessages.size)
     }
 
     @Test
@@ -84,8 +123,6 @@ class RestaurantSearchServiceTest {
 
     @Test
     fun `should throw InvalidSearchParamsException when distance is out of range`() {
-        val searchParams = RestaurantSearchParamsDTO(distance = 20)
-
         assertThrows<InvalidSearchParamsException> {
             restaurantSearchService.validateRestaurantSearchParams(
                 restaurantName = null,
@@ -99,7 +136,6 @@ class RestaurantSearchServiceTest {
 
     @Test
     fun `should throw InvalidSearchParamsException when customer rating is out of range`() {
-        val searchParams = RestaurantSearchParamsDTO(customerRating = 6)
 
         assertThrows<InvalidSearchParamsException> {
             restaurantSearchService.validateRestaurantSearchParams(
