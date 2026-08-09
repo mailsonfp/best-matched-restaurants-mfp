@@ -7,16 +7,16 @@ import com.mailson.pereira.tech.assessment.input.exceptions.CuisineNotFoundExcep
 import com.mailson.pereira.tech.assessment.output.cuisine.CuisineRepository
 import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
 import com.mailson.pereira.tech.assessment.service.cuisine.CuisineService
+import com.mailson.pereira.tech.assessment.service.mapper.CuisineMapper
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.kotlin.whenever
-import org.mockito.kotlin.anyOrNull
 
 @ExtendWith(MockitoExtension::class)
 class CuisineServiceTest {
@@ -24,16 +24,32 @@ class CuisineServiceTest {
     @Mock
     private lateinit var cuisineRepository: CuisineRepository
 
-    @InjectMocks
+    @Mock
+    private lateinit var cuisineMapper: CuisineMapper
+
     private lateinit var cuisineService: CuisineService
+
+    @BeforeEach
+    fun setUp() {
+        cuisineService = CuisineService(
+            cuisineRepository = cuisineRepository,
+            cuisineMapper = cuisineMapper
+        )
+    }
 
     @Test
     fun `should save cuisine successfully with anyOrNull`() {
         val request = CuisineRequestInputDTO(name = "Italian")
+        val requestOutput = CuisineOutputDTO(id = 1L, name = request.name)
         val savedCuisine = CuisineOutputDTO(id = 1L, name = request.name)
+        val response = com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO(
+            id = savedCuisine.id!!,
+            name = savedCuisine.name
+        )
 
-        // Using anyOrNull() to allow nullable parameters
-        whenever(cuisineRepository.save(anyOrNull())).thenReturn(savedCuisine)
+        whenever(cuisineMapper.toOutputDTO(request)).thenReturn(requestOutput)
+        whenever(cuisineRepository.save(requestOutput)).thenReturn(savedCuisine)
+        whenever(cuisineMapper.toResponseDTO(savedCuisine)).thenReturn(response)
 
         val result = cuisineService.save(request)
 
@@ -59,8 +75,14 @@ class CuisineServiceTest {
             CuisineOutputDTO(id = 1L, name = "Italian"),
             CuisineOutputDTO(id = 2L, name = "Japanese")
         )
+        val responseCuisines = listOf(
+            com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO(id = 1L, name = "Italian"),
+            com.mailson.pereira.tech.assessment.input.cuisine.dto.CuisineResponseInputDTO(id = 2L, name = "Japanese")
+        )
 
         Mockito.`when`(cuisineRepository.getAll()).thenReturn(cuisines)
+        whenever(cuisineMapper.toResponseDTO(cuisines[0])).thenReturn(responseCuisines[0])
+        whenever(cuisineMapper.toResponseDTO(cuisines[1])).thenReturn(responseCuisines[1])
 
         val result = cuisineService.getAll()
 

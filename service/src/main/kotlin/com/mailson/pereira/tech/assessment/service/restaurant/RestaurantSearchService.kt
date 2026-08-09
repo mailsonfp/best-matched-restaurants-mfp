@@ -1,7 +1,7 @@
 package com.mailson.pereira.tech.assessment.service.restaurant
 
 import com.google.gson.Gson
-import com.mailson.pereira.tech.assessment.entities.enums.ParamKeyEnum
+import com.mailson.pereira.tech.assessment.entities.utils.SearchUtils
 import com.mailson.pereira.tech.assessment.input.exceptions.InvalidSearchParamsException
 import com.mailson.pereira.tech.assessment.input.restaurant.RestaurantSearchInput
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantMatchedResponseInputDTO
@@ -100,60 +100,22 @@ class RestaurantSearchService(
         httpServletRequest: HttpServletRequest?
     ) {
 
-        val paramsList = arrayListOf<MessageDetailOutputDTO>()
-
-        if(!restaurantName.isNullOrBlank()) {
-            paramsList.add(
-                MessageDetailOutputDTO(
-                    paramKey = ParamKeyEnum.RESTAURANT_NAME.paramName,
-                    paramValue = restaurantName,
-                    paramType = ParamKeyEnum.RESTAURANT_NAME.paramType.name,
-                )
-            )
-        }
-
-        distance?.let {
-            paramsList.add(
-                MessageDetailOutputDTO(
-                    paramKey = ParamKeyEnum.DISTANCE.paramName,
-                    paramValue = it.toString(),
-                    paramType = ParamKeyEnum.DISTANCE.paramType.name,
-                )
-            )
-        }
-
-        customerRating?.let {
-            paramsList.add(
-                MessageDetailOutputDTO(
-                    paramKey = ParamKeyEnum.CUSTOMER_RATING.paramName,
-                    paramValue = customerRating.toString(),
-                    paramType = ParamKeyEnum.CUSTOMER_RATING.paramType.name,
-                )
-            )
-        }
-
-        price?.let {
-            paramsList.add(
-                MessageDetailOutputDTO(
-                    paramKey = ParamKeyEnum.PRICE.paramName,
-                    paramValue = price.toString(),
-                    paramType = ParamKeyEnum.PRICE.paramType.name,
-                )
-            )
-        }
-
-        if(!cuisineName.isNullOrBlank()) {
-            paramsList.add(
-                MessageDetailOutputDTO(
-                    paramKey = ParamKeyEnum.CUISINE_NAME.paramName,
-                    paramValue = cuisineName.toString(),
-                    paramType = ParamKeyEnum.CUISINE_NAME.paramType.name,
-                )
+        val paramsList = SearchUtils.buildSearchParamDetails(
+            restaurantName = restaurantName,
+            distance = distance,
+            customerRating = customerRating,
+            price = price,
+            cuisineName = cuisineName
+        ).map {
+            MessageDetailOutputDTO(
+                paramKey = it.paramKey,
+                paramValue = it.paramValue,
+                paramType = it.paramType
             )
         }
 
         val searchMetricMessage = MessageOutputDTO(
-            searchClientIp = extractClientIp(httpServletRequest),
+            searchClientIp = SearchUtils.extractClientIp(httpServletRequest),
             searchUserAgent = httpServletRequest?.getHeader("User-Agent"),
             searchReferrer = httpServletRequest?.getHeader("Referer"),
             searchResultCount = searchResult.size,
@@ -162,11 +124,5 @@ class RestaurantSearchService(
         )
 
         messageOutput.sendMessageToSearchQueue(searchMetricMessage)
-    }
-
-    private fun extractClientIp(request: HttpServletRequest?): String {
-        return if(request != null ) request.getHeader("X-Forwarded-For")?.split(",")?.firstOrNull()?.trim()
-            ?: request.remoteAddr
-        else ""
     }
 }

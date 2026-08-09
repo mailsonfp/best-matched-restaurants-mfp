@@ -9,14 +9,14 @@ import com.mailson.pereira.tech.assessment.output.cuisine.CuisineRepository
 import com.mailson.pereira.tech.assessment.output.cuisine.dto.CuisineOutputDTO
 import com.mailson.pereira.tech.assessment.output.restaurant.RestaurantRepository
 import com.mailson.pereira.tech.assessment.output.restaurant.dto.RestaurantOutputDTO
+import com.mailson.pereira.tech.assessment.service.mapper.RestaurantMapper
 import com.mailson.pereira.tech.assessment.service.restaurant.RestaurantMaintenanceService
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
 import org.mockito.junit.jupiter.MockitoExtension
 import java.math.BigDecimal
@@ -30,8 +30,19 @@ class RestaurantMaintenanceServiceTest {
     @Mock
     private lateinit var cuisineRepository: CuisineRepository
 
-    @InjectMocks
+    @Mock
+    private lateinit var restaurantMapper: RestaurantMapper
+
     private lateinit var restaurantMaintenanceService: RestaurantMaintenanceService
+
+    @BeforeEach
+    fun setUp() {
+        restaurantMaintenanceService = RestaurantMaintenanceService(
+            restaurantRepository = restaurantRepository,
+            cuisineRepository = cuisineRepository,
+            restaurantMapper = restaurantMapper
+        )
+    }
 
     @Test
     fun `should save restaurant successfully when cuisine exists and name is unique`() {
@@ -52,10 +63,28 @@ class RestaurantMaintenanceServiceTest {
             price = request.price,
             cuisine = existingCuisine
         )
+        val outputToSave = RestaurantOutputDTO(
+            id = request.restauranId,
+            name = request.restaurantName,
+            distance = request.distance,
+            customerRating = request.customerRating,
+            price = request.price,
+            cuisine = existingCuisine
+        )
+        val response = com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO(
+            id = savedRestaurant.id,
+            name = savedRestaurant.name,
+            distance = savedRestaurant.distance,
+            customerRating = savedRestaurant.customerRating,
+            price = savedRestaurant.price,
+            cuisineName = savedRestaurant.cuisine.name
+        )
 
         whenever(cuisineRepository.getByName(request.cuisineName)).thenReturn(existingCuisine)
         whenever(restaurantRepository.getByName(request.restaurantName)).thenReturn(null)
-        whenever(restaurantRepository.save(anyOrNull())).thenReturn(savedRestaurant)
+        whenever(restaurantMapper.toOutputDTO(request, existingCuisine)).thenReturn(outputToSave)
+        whenever(restaurantRepository.save(outputToSave)).thenReturn(savedRestaurant)
+        whenever(restaurantMapper.toInputDTO(savedRestaurant)).thenReturn(response)
 
         val result = restaurantMaintenanceService.save(request)
 
@@ -150,8 +179,17 @@ class RestaurantMaintenanceServiceTest {
             price = BigDecimal.valueOf(30),
             cuisine = CuisineOutputDTO(id = 3L, name = "Italian")
         )
+        val mappedRestaurant = com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO(
+            id = existingRestaurant.id,
+            name = existingRestaurant.name,
+            distance = existingRestaurant.distance,
+            customerRating = existingRestaurant.customerRating,
+            price = existingRestaurant.price,
+            cuisineName = existingRestaurant.cuisine.name
+        )
 
         whenever(restaurantRepository.getByName(name)).thenReturn(existingRestaurant)
+        whenever(restaurantMapper.toInputDTO(existingRestaurant)).thenReturn(mappedRestaurant)
 
         val result = restaurantMaintenanceService.getByName(name)
 

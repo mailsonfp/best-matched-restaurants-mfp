@@ -2,6 +2,7 @@ package com.mailson.pereira.tech.assessment.web.restaurant
 
 import com.mailson.pereira.tech.assessment.input.restaurant.RestaurantMaintenanceInput
 import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantRequestInputDTO
+import com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -31,7 +32,7 @@ class RestaurantMaintenanceController(
     @ApiResponse(responseCode = "404", description = "Restaurant not found")
     @GetMapping("/name")
     fun getRestaurantByName(@RequestParam @Parameter(description = "Restaurant name to search for", required = true)
-                            name: String): ResponseEntity<com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO>{
+                            name: String): ResponseEntity<RestaurantResponseInputDTO>{
         return ResponseEntity.ok(restaurantMaintenanceService.getByName(name))
     }
 
@@ -40,7 +41,7 @@ class RestaurantMaintenanceController(
     @ApiResponse(responseCode = "400", description = "Invalid request data")
     @PostMapping
     fun createRestaurant(@RequestBody @Validated @Parameter(description = "Restaurant details for creation", required = true)
-                         request: RestaurantRequestInputDTO): ResponseEntity<com.mailson.pereira.tech.assessment.input.restaurant.dto.RestaurantResponseInputDTO> {
+                         request: RestaurantRequestInputDTO): ResponseEntity<RestaurantResponseInputDTO> {
         return ResponseEntity.created(URI.create("v1/restaurant/maintenance")).body(restaurantMaintenanceService.save(request))
     }
 
